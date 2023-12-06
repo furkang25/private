@@ -1,0 +1,60 @@
+{% load static %}
+
+<!-- Einbindung des spezifischen CSS-Stils für die Navigationsleiste -->
+<link rel="stylesheet" href="{% static 'css/navbar_styles.css' %}">
+
+<!-- Start der Navigationsleiste -->    
+<nav class="navbar Header navbar-expand-lg navbar-light bg-light">
+    <div class="container-fluid">
+        <!-- Markenlogo der Webseite -->
+        <a class="navbar-brand" href="/">
+        <img src="{% static 'bilder/Logo.png' %}" alt="Logo">
+        </a>
+        <!-- Button für das Navigationsmenü auf kleineren Bildschirmen -->
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <!-- Inhalt der Navigationsleiste -->
+        <div class="collapse navbar-collapse" id="navbarNavDropdown">
+            <div class="d-flex flex-grow-1">
+                <!-- Leerer Platzhalter -->
+            </div>
+
+            <!-- Menüpunkte -->
+            <ul class="navbar-nav">
+            </li>
+            <!-- Projektansicht -->
+            <li class="nav-item">
+            <a class="nav-link" aria-current="page" href="{% url 'webseite:aktuelles' %}">Aktuelles</a>
+            </li>
+            <!-- Dokumentenarchiv -->
+            <li class="nav-item">
+            <a class="nav-link" aria-current="page" href="{% url 'projects:project_view_list' %}">Projekte</a>
+            </li>
+            <!-- Überprüfung, ob der Benutzer angemeldet ist -->
+            <li class="nav-item">
+            <a class="nav-link" href="{% url 'documents:documents_view_list' %}">Dokumentenarchiv</a>
+            </li>
+            {% if request.user.is_authenticated %}
+  
+            <!-- Abmeldeoption für angemeldete Benutzer -->
+            <li class="nav-item">
+                <a class="nav-link" href="{% url 'webseite:logout' %}">Abmelden</a>
+                </li>
+            {% else %}
+
+            <!-- Anmeldeoption für nicht angemeldete Benutzer -->
+            <li class="nav-item">
+                <a class="nav-link" href="{% url 'webseite:login' %}">Abmelden</a>
+                </li>
+
+            {% endif %}
+
+        </ul>
+        </div>
+    </div>
+</nav>
+
+
+

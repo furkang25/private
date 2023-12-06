@@ -1,0 +1,14 @@
+<!-- Ein Link zum Anmelden; der Link wird durch Django erzeugt -->
+<a href="{% url 'webseite:login' %}">LogIn</a>
+
+<!-- Einbinden der jQuery-Bibliothek -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+<!-- JavaScript-Teil -->
+<script>
+    // Wenn das Dokument vollständig geladen ist
+    $(document).ready(function(){
+        // Ändere den Pfad der aktuellen Seite zu '/'
+        window.location.pathname = '/';  
+    });
+</script>

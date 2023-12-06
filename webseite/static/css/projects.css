@@ -1,0 +1,82 @@
+#dropzone{
+    margin-top: 1rem;
+    border: 0;
+    background-color: #45818e33;
+}
+
+#team-results{
+    position: relative;
+    box-shadow: 0px 4px 12px #e0e0e0;
+}
+
+#team-results .team-item{
+    background-color: #fff;
+    padding: 1rem 0 0 1rem;
+    position: relative;
+    width: 100%;
+    cursor: pointer;
+}
+
+#team-results .team-item:hover{
+    color: #45818e;
+}
+
+.brand-color{
+    color: #45818e;
+}
+
+.icon-font{
+    font-size: 1.5rem;
+    color: #45818e;
+    margin-left: 1rem;
+    cursor: pointer;
+}
+
+.icon-font:hover{
+    color: #DCDCDC;
+}
+
+
+.badge {
+    line-height: 2;
+}
+
+.watchlisted{
+    color: #DCDCDC;
+}
+
+.bg-color-files{
+    height: 50px;
+    padding: 0.85rem;
+    border-radius: 0.32rem;
+    background-color:#45818e33;
+}
+
+.fa-file{
+    font-size: 1.4rem;
+    margin-top: 5px;
+    padding-right: 20px;
+    color: #45818e;
+}
+
+.watchlisted {
+    color: red;
+  }
+
+.bookmark-icon {
+    position: absolute;
+    top: 5px;
+    right: 5px;
+}
+
+.bookmark-icon2 {
+    position: absolute;
+    top: 5px;
+    color: red;
+    right: 5px;
+}
+
+
+.select2-container {
+    z-index: 9999;
+}

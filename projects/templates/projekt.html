@@ -1,0 +1,42 @@
+{% extends 'webseite/index.html' %}  <!-- Erbt Struktur von 'index.html' -->
+{% load static %}  <!-- Lädt statische Dateien -->
+{% load user_tags %}  <!-- Lädt benutzerdefinierte Tags, wahrscheinlich für dynamische Inhalte -->
+
+<!--CSS Styles-->
+{% block css %}  <!-- Start des CSS-Blocks -->
+<link href="https://unpkg.com/dropzone@6.0.0-beta.1/dist/dropzone.css" rel="stylesheet" type="text/css" />  <!-- Dropzone CSS für Drag-and-Drop-Uploads -->
+<link rel="stylesheet" href="{% static 'css/projects.css' %}">  <!-- Lädt ein benutzerdefiniertes CSS für Projekte -->
+{% endblock %}  <!-- Ende des CSS-Blocks -->
+
+{% block content %}  <!-- Start des Inhaltsblocks -->
+  <div class="container-fluid bg-white">  <!-- Start des Hauptcontainers -->
+    <div class="row">  <!-- Start der Hauptzeile -->
+
+      <!--sidebar-->
+      <div class="col-12 col-md-2 bg-white border-end" style="max-height: calc(100vh - 140px); height: 100vh;">  <!-- Sidebar-Bereich -->
+        {% include "includes/sidebar.html" %}  <!-- Fügt die Sidebar aus einer externen HTML-Datei hinzu -->
+      </div>
+
+      <!--Projects Search-->
+      {% include "includes/project-search.html" %}  <!-- Fügt die Projektsuchleiste aus einer externen HTML-Datei hinzu -->
+
+      <!--Content-->
+      <div class="col-12 col-md-7">  <!-- Hauptinhalt-Bereich -->
+        {% include "includes/project-content.html" %}  <!-- Fügt den Projektinhalt aus einer externen HTML-Datei hinzu -->
+      </div>
+
+    </div>
+  </div>
+
+  <!--Modal Tags-->
+  {% include "includes/modal.html" %}  <!-- Fügt ein Modal-Fenster aus einer externen HTML-Datei hinzu -->
+  {% include "includes/modal-comment.html" %}  <!-- Fügt ein Kommentarmodal aus einer externen HTML-Datei hinzu -->
+
+{% endblock content %}  <!-- Ende des Inhaltsblocks -->
+
+<!--Javascript-->
+{% block javasript %}  <!-- Start des JavaScript-Blocks -->
+<script src="https://unpkg.com/dropzone@6.0.0-beta.1/dist/dropzone-min.js"></script>  <!-- Dropzone JS für Drag-and-Drop-Uploads -->
+<script src="{% static '/js/projects.js' %}"></script>  <!-- Benutzerdefiniertes JavaScript für Projekte -->
+<script src="{% static '/js/comments.js' %}"></script>  <!-- Benutzerdefiniertes JavaScript für Kommentare -->
+{% endblock %}  <!-- Ende des JavaScript-Blocks -->

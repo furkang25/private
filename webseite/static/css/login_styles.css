@@ -1,0 +1,47 @@
+/* Allgemeine Stile */
+body, html {
+    height: 100%;
+    margin: 0;
+}
+
+body {
+    font-family: 'Gabriela', sans-serif;
+    background-color: #f0f0f0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Anmeldeformular Stile */
+.LoginForm {
+    width: 400px;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    background: white;
+}
+
+.LoginForm img {
+    width: 100%;
+    height: auto;
+    margin-bottom: 20px;
+}
+
+.LoginForm input {
+    width: calc(100% - 20px);
+    padding: 5px 10px;
+    margin-bottom: 10px;
+    border-radius: 5px;
+    border: 1px solid #ddd;
+    font-size: 20px; /* geänderte Schriftgröße */
+}
+
+.LoginForm button {
+    width: 100%;
+    padding: 10px;
+    border-radius: 5px;
+    border: none;
+    background-color: #333;
+    color: white;
+    font-size: 20px; /* geänderte Schriftgröße */
+}

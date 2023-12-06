@@ -1,0 +1,77 @@
+<!-- Beginn des ersten Modal-Dialogs zum Verwalten von Dokumenten -->
+<div class="modal fade" id="exampleDocumentsToggle" aria-hidden="true" aria-labelledby="exampleDocumentsToggleLabel" tabindex="-1">
+  <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+          <!-- Kopfzeile des Modals -->
+          <div class="modal-header">
+              <h5 class="modal-title" id="exampleDocumentsToggleLabel">Dokument</h5>
+              <!-- Schließen-Button des Modals -->
+              <button type="button" id="closeDocument" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <!-- Hauptbereich des Modals -->
+          <div class="modal-body">
+              <!-- Bereich für eventuelle Warnungen oder Fehlermeldungen -->
+              <div id="alertDocument"></div>
+              <form>
+                  <!-- Eingabefeld für den Dokumentennamen -->
+                  <label for="documentNameForm" class="form-label">Dokumentname</label>
+                  <input type="text" class="form-control mb-3" id="documentNameForm">
+                  
+
+                  <!-- Eingabefeld für den Tag -->
+                  <label for="tagForm" class="form-label">Tag</label>
+                  <input type="text" class="form-control mb-3" id="tagForm">
+                  <!-- Ausgabebereich für Tag-Suchergebnisse -->
+                  <div id="tagResults" class="results-div"></div>
+                  <!-- Verstecktes Feld für die Tag-ID -->
+                  <input type="hidden" id="tagHiddenId" value="">
+                  
+                  <!-- Eingabefeld für das Projekt -->
+                  <label for="projektForm" class="form-label">Projektname</label>
+                  <input type="text" class="form-control mb-3" id="projektForm">
+                  <!-- Verstecktes Feld für die Projekt-ID -->
+                  <input type="hidden" id="projektHiddenId" value="">
+                  <!-- Ausgabebereich für Projekt-Suchergebnisse -->
+                  <div id="projektResults" class="results-div"></div>
+
+                  <!-- Verstecktes Feld für die Dokumenten-ID -->
+                  <input type="hidden" id="docummentIdForm" value="">
+                  
+                  <!-- Dropzone für den Dokumenten-Upload -->
+                  <div id="dropzoneDocs" class="dropzone">
+                      <div class="dz-message" id="deinButton">
+                          Datei hochladen
+                      </div>
+                  </div>
+                  
+                  <!-- Löschen- und Speichern-Buttons -->
+                  <button class="btn btn-danger mt-3 d-none" id="saveDocumentsFormDelete" data-bs-target="#exampleModalToggle2" data-bs-toggle="modal" data-bs-dismiss="modal">Löschen</button>
+                  <button type="button" id="saveDocumentsForm" class="btn btn-primary mt-3">Speichern</button>
+                  <button type="button" id="saveDocumentsFormUpdate" class="btn btn-primary mt-3 d-none">Ändern</button>
+              </form>
+          </div>
+      </div>
+  </div>
+</div>
+
+<!-- Beginn des zweiten Modal-Dialogs zum Löschen von Dokumenten -->
+<div class="modal fade" id="exampleModalToggle2" aria-hidden="true" aria-labelledby="exampleModalToggleLabel2" tabindex="-1">
+  <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+          <!-- Kopfzeile des Modals -->
+          <div class="modal-header">
+              <h5 class="modal-title" id="exampleModalToggleLabel2">Löschen</h5>
+              <!-- Schließen-Button des Modals -->
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <!-- Hauptbereich des Modals -->
+          <div class="modal-body">
+              Dokument endgültig löschen.
+          </div>
+          <!-- Fußzeile des Modals mit Löschen-Button -->
+          <div class="modal-footer">
+              <button class="btn btn-danger documents-delte-btn" data-documents-delete-id="" id="documentesDelete">Löschen</button>
+          </div>
+      </div>
+  </div>
+</div>

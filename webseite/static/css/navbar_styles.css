@@ -1,0 +1,54 @@
+/* Allgemeine Stile */
+body, html {
+    height: 100%;
+    margin: 0;
+}
+
+body {
+    font-family: 'Inter', sans-serif;
+    background-color: #f0f0f0;
+}
+
+img {
+    width: auto;
+    height: 80px;
+}
+
+/* Header-Stile */
+.Header {
+    width: 100%;
+    height: 100px;
+    background: #DCDCDC;
+    border-bottom: 0.50px black solid;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 20px;
+    box-sizing: border-box;
+}
+
+.Header a {
+    text-decoration: none;
+    margin-left: 15px;
+    font-size: 20px;
+    color: black;
+    padding: 5px 5px;
+    border-radius: 10px;
+    transition: background-color 0.3s ease;
+}
+
+.Header a:hover {
+    background-color: #b5b5b5;
+}
+
+.Header a.btn {
+    font-size: 16px;
+    margin-left: 10px;
+    margin-right: 10px;
+}
+
+.Header .Dokumentenarchiv, .Header .MyProjectsText, .Header .OverviewText {
+    font-size: 40px;
+    font-weight: 400;
+    color: black;
+}

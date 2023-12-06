@@ -1,0 +1,18 @@
+<!-- Container für die rechte Seitenspalte, responsiv mit Bootstrap-Klassen -->
+<div class="col-12 col-md-3 p-0">
+
+  <!-- Flex-Container für das Suchfeld und die Projektliste -->
+  <div class="d-flex flex-column align-items-stretch flex-shrink-0 bg-white border-end" style="max-width: 380px;">
+
+      <!-- Suchfeld für Projekte -->
+      <div class="p-3">
+          <input type="text" class="form-control form-control-lg" id="exampleFormControlInput1" placeholder="Geben Sie den Projektnamen ein...">
+      </div>
+
+      <!-- Container für die Projektliste mit Scrollbereich -->
+      <div id="projectList" class="list-group list-group-flush border-bottom scrollarea" style="max-height: calc(100vh - 240px); height: 100vh; overflow-y: auto;">
+          <!--Ergenisse-->
+      </div>
+
+  </div>
+</div>

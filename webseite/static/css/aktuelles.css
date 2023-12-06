@@ -1,0 +1,72 @@
+.welcome-section {
+    text-align: center;
+    padding: 50px;
+}   
+
+.welcome-message {
+    font-size: 40px;
+}
+
+.welcome-message2 {
+    font-size: 25px;
+}
+
+.button-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 20px;
+    margin-top: 30px;
+}
+
+.button-card {
+    flex: 0 0 calc(33.33% - 20px);
+    max-width: calc(33.33% - 20px);
+    text-align: center;
+    background-color: #fff;
+    padding: 20px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.button-card h4 {
+    margin-bottom: 10px;
+    font-size: 18px;
+}
+
+.button-card p {
+    font-size: 14px;
+}
+
+.welcome-section {
+    position: relative;
+    text-align: center;
+    padding: 250px;
+    z-index: 2;
+}
+
+.slideshow-container {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: -1;
+    opacity: 0.5; /* Reduziert die Opazität */
+}
+
+.slide {
+    display: none;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+}
+
+.slide img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+

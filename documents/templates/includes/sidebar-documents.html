@@ -1,0 +1,31 @@
+<!-- Ein Django-Tag wird geladen, um benutzerdefinierte Tags verwenden zu können -->
+{% load user_tags %}
+
+<!-- Beginn der Seitenleiste -->
+<div class="col-12 col-md-2 bg-white border-end">
+    <!-- Button-Container -->
+    <div class="d-grid gap-2 col-12 mx-auto pt-3">
+        <!-- Button zum Öffnen des Hochlade-Modals -->
+        <button class="btn btn-primary" data-bs-toggle="modal" href="#exampleDocumentsToggle" role="button">
+            Dokument hochladen
+        </button>
+        <!-- Button zum Öffnen des Tag-Modals -->
+        <button class="btn btn-primary" data-bs-toggle="modal" href="#exampleTagTogge" role="button">
+            Neuen Tag erstellen 
+        </button>
+        <!-- Button zur Verwaltung von Tags -->
+        <button class="btn btn-primary" id="exampleTags">Verwaltung von Tags</button>
+    </div>
+    <!-- Menüliste für verschiedene Dokumentenoptionen -->
+    <div class="list-group mt-3 border-0">
+        <!-- Link zu allen Dokumenten -->
+        <a href="javascript:void(0);" id="resteDocuments" class="list-group-item list-group-item-action border-0">Alle Dokumente</a>
+        <!-- Link zu benutzerspezifischen Dokumenten, der Benutzername wird durch ein Django-Tag eingefügt -->
+        <a href="javascript:void(0);" id="userDocuments" class="list-group-item list-group-item-action border-0">
+            Erstellte Dokumente von {% get_username user_id %} 
+        </a>
+        <!-- Link zu markierten Projekten -->
+        <a href="javascript:void(0);" id="watchlisteuserDocuments" class="list-group-item list-group-item-action border-0">Markierte Dokumente</a>
+
+    </div>
+</div>
