@@ -1,78 +1,72 @@
-<!-- Abschnitt für Projektdetails -->
+<!--Projektdetails -->
 <div class="row myHideClass d-none">
-    <!-- Karte für Projektdetails -->
-    <div class="card border-0">
-        <div class="card-body">
-            <!-- Titel und Name des Projekts -->
-            <div class="col-12">
-                <small class="brand-color">Projektname</small>
-                <h5 id="viewNameProject">Name</h5>
-            </div>
-
-            <!-- Icons für Lesezeichen, Bearbeiten und Löschen -->
-            <div class="col-12 my-3 d-flex">
-                <input type="hidden" id="userId" value="{{user_id}}">
-                <!-- Lesezeichen-Icon -->
-                <div id="bookmarkForm">
-                    <i id="bookmarkId" data-project-bookmark="" class="icon-font fa-solid fa-book-bookmark project"></i>
-                </div>
-                <!-- Bearbeiten-Icon -->
-                <div id="fileForm">
-                    <a href="javascript:void(0);" id="updateProjekt" data-projekt-id="">
-                        <i class="icon-font fa-solid fa-file-pen"></i>
-                    </a>
-                </div>
-                <!-- Löschen-Icon (anfangs ausgeblendet) -->
-                <div class="trashForm">
-                    <i class="icon-font fa-solid fa-trash d-none" id="trashDelete"></i>
-                </div>
-            </div>
-
-            <!-- Team- und Ersteller-Informationen -->
-            <div class="col-12 mt-1">
-                <small class="brand-color">Zugewiesen an</small>
-                <h5 id="viewTeamProject" class="d-flex justify-content-start"></h5>
-            </div>
-            <div class="col-12">
-                <small class="brand-color">Erstellt von</small>
-                <h5 id="creatorProjektView"></h5>
-            </div>
-
-            <!-- Projektbeschreibung -->
-            <div class="col-12">
-                <small class="brand-color">Projektbeschreibung</small>
-                <h5 id="viewDescriptionProject">Text</h5>
-            </div>
+  <div class="card border-0">
+    <div class="card-body">
+      <div class="col-12">
+        <small class="brand-color">Projektname</small>
+        <h5 id="viewNameProject">Name</h5>
+      </div>
+      <div class="col-12 my-3 d-flex">
+        <input type="hidden" id="userId" value="{{user_id}}" />
+        <div id="bookmarkForm">
+          <i
+            id="bookmarkId"
+            projectBookmark=""
+            class="icon-font fa-solid fa-book-bookmark project"
+          ></i>
         </div>
+        <div id="fileForm">
+          <a href="javascript:void(0);" id="updateProjekt" data-projekt-id="">
+            <i class="icon-font fa-solid fa-file-pen"></i>
+          </a>
+        </div>
+        <div class="trashForm">
+          <i class="icon-font fa-solid fa-trash d-none" id="trashDelete"></i>
+        </div>
+      </div>
+      <div class="col-12 mt-1">
+        <small class="brand-color">Zugewiesen an</small>
+        <h5 id="viewAssignedUser" class="d-flex justify-content-start"></h5>
+      </div>
+      <div class="col-12">
+        <small class="brand-color">Erstellt von</small>
+        <h5 id="viewCreatorProject"></h5>
+      </div>
+      <div class="col-12">
+        <small class="brand-color">Projektbeschreibung</small>
+        <h5 id="viewDescriptionProject">Text</h5>
+      </div>
     </div>
+  </div>
 </div>
-
-<!-- Abschnitt für Dokumente -->
 <div class="row">
-    <div class="col-12">
-        <div class="card border-0">
-            <div class="card-body">
-                <!-- Platzhalter für Dokumenten-Button -->
-                <div id="DocumentsButton"></div>
-            </div>
-        </div>
-    </div>
-</div>
-
-<!-- Abschnitt für Kommentare -->
-<div class="row mt-5 pt-5 myHideClass d-none">
+  <div class="col-12">
     <div class="card border-0">
-        <div class="card-body">
-            <!-- Titel und Kommentar-Button -->
-            <div class="d-flex align-items-baseline">
-                <h5 class="pt-1">Kommentare</h5>
-                <button type="button" id="crateComment" class="btn btn-secondary btn-sm ms-auto">Kommentar erstellen</button>
-            </div>
-            <!-- Platzhalter für Kommentare -->
-            <div id="commentsContainer"></div>
-        </div>
+      <div class="card-body">
+        <div id="documentsButton"></div>
+      </div>
     </div>
+  </div>
 </div>
 
-<!-- Hinweistext, wenn kein Projekt ausgewählt ist -->
-<h2 class="myViewClass text-center mt-5">Bitte wählen Sie ein Projekt aus ...</h2>
+<!--Kommentare -->
+<div class="row mt-5 pt-5 myHideClass d-none">
+  <div class="card border-0">
+    <div class="card-body">
+      <div class="d-flex align-items-baseline">
+        <h5 class="pt-1">Kommentare</h5>
+        <button
+          type="button"
+          id="createComment"
+          class="btn btn-secondary btn-sm ms-auto"
+        >
+          Kommentar erstellen
+        </button>
+      </div>
+      <div id="commentOutput"></div>
+    </div>
+  </div>
+</div>
+<h2 class="myViewClass text-center mt-5">
+  Bitte wählen Sie ein Projekt aus ...
+</h2>

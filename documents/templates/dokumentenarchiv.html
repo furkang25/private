@@ -2,93 +2,97 @@
 {% load static %}
 {% load user_tags %}
 
-<!-- Start des CSS Blocks -->
-{% block css %}
-<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css" rel="stylesheet">
-<!-- Einbindung von jQuery-UI Styles -->
-<link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
-<!-- Einbindung von Dropzone.js Styles -->
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/dropzone/5.9.2/min/dropzone.min.css">
-<!-- Einbindung von benutzerdefinierten Styles für Tags und Dokumente -->
-
-<link rel="stylesheet" href="{% static 'css/documents.css' %}">
+{%block css %}
+<link
+  href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css"
+  rel="stylesheet"
+/>
+<link
+  rel="stylesheet"
+  href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css"
+/>
+<link
+  rel="stylesheet"
+  href="https://cdnjs.cloudflare.com/ajax/libs/dropzone/5.9.2/min/dropzone.min.css"
+/>
+<link rel="stylesheet" href="{% static 'css/documents.css' %}" />
 {% endblock %}
-<!-- Ende des CSS Blocks -->
 
-<!-- Start des Inhalts Blocks -->
 {% block content %}
-    
-<div class="container-fluid bg-white" style="max-height: calc(100vh - 140px); height: 100vh;">
-    <div class="row">
-        <!-- Verstecktes Feld zur Speicherung der User-ID -->
-        <input type="hidden" id="loginUserId" value="{{user.id}}">
 
-        <!-- Einbindung der Sidebar für Dokumente -->
-        {% include "includes/sidebar-documents.html" %}
-       
-        <!-- Start des Hauptinhalts -->
-        <div class="col-12 col-md-10 bg-white">
-            <!-- Such- und Filterbereich -->
-            <div class="row my-3">
-                <!-- Eingabefeld zur Suche nach Dateinamen -->
-                <div class="col-md-3">
-                    <input class="form-control" id="searchQuery" type="text" placeholder="Geben Sie den Dateinamen ein...">
-                </div>
-                <!-- Dropdown zur Team-Auswahl -->
-                <div class="col-md-2">
-                    <select id="userSelect" class="form-select" aria-label="Default select example">
-                        <option selected></option>
-                    </select>
-                </div>
-                <!-- Eingabefelder für Datumsbereich -->
-                <div class="col-md-2">
-                    <input class="form-control" type="text" id="datepicker-from" name="datepicker-from" placeholder="Datum von...">
-                </div>
-                <div class="col-md-2">
-                    <input class="form-control" type="text" id="datepicker-to" name="datepicker-to" placeholder="Datum bis...">
-                </div>
-                <!-- Dropdown für Tags -->
-                <div class="col-md-2">
-                    <select class="form-select" id="selectTags" aria-label="Default select example">
-                        <option selected></option>
-                    </select>
-                </div>
-                <div class="col-md-1">
-                    <a href="javascript:void(0);" class="btn btn-secondary d-none" id="resetDocumentsfilter">
-                        <i class="fa-solid fa-arrows-rotate"></i>
-                    </a>
-                </div>
-            </div>
-            
-            <!-- Bereich, in dem Dokumentenkarten dynamisch geladen werden -->
-            <div id="documentsCards" class="m-4"></div>
+<div
+  class="container-fluid bg-white"
+  style="max-height: calc(100vh - 140px); height: 100vh"
+>
+  <div class="row">
+    <input type="hidden" id="loginUserId" value="{{user.id}}" />
 
-            <!-- Container für die Paginierung -->
-            <div id="paginationContainer" class="pagination">
-                <!-- Pagination-Links werden hier dynamisch erstellt -->
-            </div>
+    {% include "includes/sidebar-documents.html" %}
+
+    <div class="col-12 col-md-10 bg-white">
+      <div class="row my-3">
+        <div class="col-md-3">
+          <input
+            class="form-control"
+            id="searchQuery"
+            type="text"
+            placeholder="Geben Sie den Dateinamen ein..."
+          />
         </div>
-        <!-- Ende des Hauptinhalts -->
+        <div class="col-md-2">
+          <select id="selectUser" class="form-select">
+            <option selected></option>
+          </select>
+        </div>
+        <div class="col-md-2">
+          <input
+            class="form-control"
+            type="text"
+            id="datepickerFrom"
+            name="datepickerFrom"
+            placeholder="Datum von..."
+          />
+        </div>
+        <div class="col-md-2">
+          <input
+            class="form-control"
+            type="text"
+            id="datepickerTo"
+            name="datepickerTo"
+            placeholder="Datum bis..."
+          />
+        </div>
+        <div class="col-md-2">
+          <select class="form-select" id="selectTags">
+            <option selected></option>
+          </select>
+        </div>
+        <div class="col-md-1">
+          <a
+            href="javascript:void(0);"
+            class="btn btn-secondary d-none"
+            id="resetDocumentsfilter"
+          >
+            <i class="fa-solid fa-arrows-rotate"></i>
+          </a>
+        </div>
+      </div>
+      <div id="documentCards" class="m-4"></div>
+
+      <div id="paginationContainer" class="pagination"></div>
     </div>
+  </div>
 </div>
 
-<!-- Einbindung zusätzlicher Modale -->
 {% include "includes/tag-modal.html" %}
 {% include "includes/documents-modal.html" %}
-
 {% endblock content %}
-<!-- Ende des Inhalts Blocks -->
-
-<!-- Start des JavaScript Blocks -->
 {% block javasript %}
-<!-- Einbindung von JavaScript-Bibliotheken -->
+
 <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
-<!-- Einbindung von Dropzone für Datei-Uploads -->
 <script src="https://unpkg.com/dropzone@6.0.0-beta.1/dist/dropzone-min.js"></script>
-<!-- Einbindung von benutzerdefinierten JavaScript-Dateien -->
 <script src="{% static '/js/documents.js' %}"></script>
 <script src="{% static '/js/tags.js' %}"></script>
 {% endblock %}
-<!-- Ende des JavaScript Blocks -->

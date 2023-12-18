@@ -37,7 +37,7 @@
     cursor: pointer;
 }
 
-#documentsCards h5.card-title{
+#documentCards h5.card-title{
     font-size: 0.95rem; 
 }
 
@@ -58,7 +58,7 @@
     margin-bottom: 10px;
 }
 
-.watchlisted {
+.isWatchlist {
     color: red;
   }
 
@@ -69,5 +69,3 @@
     width: 100%;
     object-fit: cover;
   }
-  
-  

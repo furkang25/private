@@ -1,35 +1,45 @@
-<!-- Modal-Fenster für Kommentare -->
-<div class="modal fade" id="exampleComment" tabindex="-1" aria-labelledby="exampleCommentLabel" aria-hidden="true">
+<div
+  class="modal fade"
+  id="comment"
+  tabindex="-1"
+  aria-labelledby="commentLabel"
+  aria-hidden="true"
+>
   <div class="modal-dialog">
-      <div class="modal-content">
-          <!-- Header des Modals mit Titel und Schließen-Button -->
-          <div class="modal-header">
-              <h5 class="modal-title" id="exampleCommentLabel">Schreiben Sie einen Kommentar zum Projekt</h5>
-              <button type="button" id="commentCloseModal" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-          </div>
-
-          <!-- Formular für den Kommentar -->
-          <form>
-              <div class="modal-body">
-                  <!-- Textbereich für den Kommentar -->
-                  <textarea class="form-control" id="commentForm" rows="3"></textarea>
-                  
-                  <!-- Verstecktes Feld für die Benutzer-ID -->
-                  <input type="hidden" id="user_id" value="{{user_id}}">
-                  
-                  <!-- Verstecktes Feld für die Projekt-ID -->
-                  <input type="hidden" id="projekt_id" value="">
-                  
-                  <!-- Verstecktes Feld für die Kommentar-ID -->
-                  <input type="hidden" id="comment_id" value="">
-              </div>
-
-              <!-- Footer des Modals mit Erstellen- und Ändern-Buttons -->
-              <div class="modal-footer">
-                  <button type="button" id="submit-comment" class="btn btn-primary">Erstellen</button>
-                  <button type="button" id="update-comment" class="btn btn-primary d-none">Ändern</button>
-              </div>
-          </form>
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="commentLabel">
+          Schreiben Sie einen Kommentar zum Projekt
+        </h5>
+        <button
+          type="button"
+          id="commentCloseModal"
+          class="btn-close"
+          data-bs-dismiss="modal"
+          aria-label="Close"
+        ></button>
       </div>
+      <form>
+        <div class="modal-body">
+          <textarea class="form-control" id="commentForm" rows="3"></textarea>
+
+          <input type="hidden" id="user_id" value="{{user_id}}" />
+          <input type="hidden" id="project_id" value="" />
+          <input type="hidden" id="comment_id" value="" />
+        </div>
+        <div class="modal-footer">
+          <button type="button" id="submitComment" class="btn btn-primary">
+            Erstellen
+          </button>
+          <button
+            type="button"
+            id="changeComment"
+            class="btn btn-primary d-none"
+          >
+            Ändern
+          </button>
+        </div>
+      </form>
+    </div>
   </div>
 </div>

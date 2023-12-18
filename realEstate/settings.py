@@ -39,7 +39,6 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'webseite.apps.WebseiteConfig',
     
-    # APP
     'projects',
     'documents'
 ]

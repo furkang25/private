@@ -1,44 +1,44 @@
-{% load user_tags %}  <!-- Lädt benutzerdefinierte Tags für zusätzliche Template-Logik -->
+{% load user_tags %}
 
-<!-- Button zum Öffnen des Modal-Fensters für die Erstellung neuer Projekte -->
 <div class="d-grid gap-2 col-12 mx-auto pt-3">
-    <button class="btn btn-primary" data-bs-toggle="modal" href="#exampleModalToggle" role="button">
-        Projekt erstellen
-    </button>
+  <button
+    class="btn btn-primary"
+    data-bs-toggle="modal"
+    href="#createProject"
+    role="button"
+  >
+    Projekt erstellen
+  </button>
 </div>
-
-<!-- Sidebar-Navigation für unterschiedliche Kategorien von Projekten -->
 <ul class="nav nav-pills flex-column mb-auto mt-3 sidebar-content">
-
-    <!-- Link zum Anzeigen aller Projekte und möglicherweise zum Zurücksetzen von Filtern -->
-    <li class="nav-item">
-        <a id="resetFiltersButton" href="javascript:void(0);" class="nav-link link-dark">
-            Alle Projekte
-        </a>
-    </li>
-
-    <!-- Link zum Anzeigen der Projekte des aktuellen Benutzers -->
-    <li class="nav-item">
-        <a href="javascript:void(0);" class="nav-link link-dark nav-link-user-projects">
-            Erstellte Projekte von {% get_username user_id %}
-        </a>
-    </li>
-
-    <!-- Link zum Anzeigen der markierten Projekte des Benutzers -->
-    <li class="nav-item">
-        <a href="javascript:void(0);" class="nav-link link-dark nav-link-watchlist-projects">
-            Markierte Projekte
-        </a>
-    </li>
-
-    <li class="nav-item">
-        <a href="javascript:void(0);" id="assignedProjects" class="nav-link link-dark">
-            Mir zugewiesen Projekte
-        </a>
-    </li>
-
+  <li class="nav-item">
+    <a id="allProjects" href="javascript:void(0);" class="nav-link link-dark">
+      Alle Projekte
+    </a>
+  </li>
+  <li class="nav-item">
+    <a
+      href="javascript:void(0);"
+      class="nav-link link-dark nav-link-user-projects"
+    >
+      Erstellte Projekte von {% get_username user_id %}
+    </a>
+  </li>
+  <li class="nav-item">
+    <a
+      href="javascript:void(0);"
+      class="nav-link link-dark nav-link-watchlist-projects"
+    >
+      Markierte Projekte
+    </a>
+  </li>
+  <li class="nav-item">
+    <a
+      href="javascript:void(0);"
+      id="assignedProjects"
+      class="nav-link link-dark"
+    >
+      Mir zugewiesen Projekte
+    </a>
+  </li>
 </ul>
-
-
-
-

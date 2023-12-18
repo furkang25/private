@@ -41,7 +41,7 @@
     line-height: 2;
 }
 
-.watchlisted{
+.isWatchlist{
     color: #DCDCDC;
 }
 
@@ -59,7 +59,7 @@
     color: #45818e;
 }
 
-.watchlisted {
+.isWatchlist {
     color: red;
   }
 

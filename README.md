@@ -1,43 +1,26 @@
-# Schritt: venv aktivieren
+# venv aktivieren
     source env/bin/activate
 
-# Schritt: Webserver betreiben
+# Server starten
     python3 manage.py runserver
 
-# Schritt: Datenbank erstellen
+# Datenbank erstellen
     python3 manage.py makemigrations
     python manage.py migrate
     python -m pip install Pillow
     python manage.py flush
 
-# Schritt: Datenbank Leer machen
+# Datenbank leeren
     python manage.py flush
 
-# Schritt: Pillow:
+# Pillow
     python -m pip install Pillow
-
-# Admin
-    Benutzer: Seyma
-    Passwort: Berlin1530
-
-# APPS
- - Webseite App
- - Project App
- - Ducuments App
  
-# App project:
+# App erstellen
     python manage.py startapp projects
 
-# Modul documents:
-    python manage.py startapp documents
-
-# Neue User:
-    python manage.py createsuperuser
-
-# Figma
-
 # Git
-- Branrch
+- Branch
 git branch --list
 git branch _name
 git checkout _name

@@ -1,49 +1,73 @@
-<!-- Modal-Fenster zum Erstellen oder Bearbeiten von Projekten -->
-<div class="modal fade" id="exampleModalToggle" aria-hidden="true" aria-labelledby="exampleModalToggleLabel" tabindex="-1">
-    <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content">
-            <!-- Modal Header mit Titel und Schließen-Button -->
-            <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalToggleLabel">Neues Projekt anlegen</h5>
-                <button type="button" id="closProjekt" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            
-            <!-- Modal Body mit Formularfeldern -->
-            <div class="modal-body">
-                <!-- Container für etwaige Fehlermeldungen -->
-                <div id="alertProjekt"></div>
-                <div id="error-message" class="alert alert-danger" style="display: none;"></div>
+<!--Fenster erstellen oder bearbeiten von Projekten -->
+<div
+  class="modal fade"
+  id="createProject"
+  aria-hidden="true"
+  aria-labelledby="createProjectLabel"
+  tabindex="-1"
+>
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="createProjectLabel">
+          Neues Projekt anlegen
+        </h5>
+        <button
+          type="button"
+          id="closProjekt"
+          class="btn-close"
+          data-bs-dismiss="modal"
+          aria-label="Close"
+        ></button>
+      </div>
+      <div class="modal-body">
+        <div id="alertProjekt"></div>
+        <div
+          id="errorAlert"
+          class="alert alert-danger"
+          style="display: none"
+        ></div>
 
-                
-                <!-- Verstecktes Feld für die Benutzer-ID -->
-                <input type="hidden" id="user_id" value="{{user_id}}">
-                
-                <!-- Eingabefeld für den Projektnamen -->
-                <label for="projektname" class="form-label mt-4">Projektname</label>
-                <input type="text" id="projektname" class="form-control mb-3">
-                
-                <label for="projektname" class="form-label mt-4">Projekt zuweisen an</label>
-                <select class="form-select" id="multiple-select-field" data-placeholder="Wählen Sie eine Option" multiple></select>
+        <input type="hidden" id="user_id" value="{{user_id}}" />
 
+        <label for="projektname" class="form-label mt-4">Projektname</label>
+        <input type="text" id="projektname" class="form-control mb-3" />
 
-                
-                <!-- Textbereich für die Projektbeschreibung -->
-                <label for="description" class="form-label mt-4">Beschreibung</label>
-                <textarea type="text" id="description" class="form-control" rows="12" class="form-control"></textarea>
-                
-                <!-- Dropzone für das Hochladen von Dateien; standardmäßig unsichtbar -->
-                <form method="post" enctype="multipart/form-data">
-                    <div id="dropzone" class="dropzone d-none"></div>
-                </form>
-            </div>
+        <label for="projektname" class="form-label mt-4"
+          >Projekt zuweisen an</label
+        >
+        <select
+          class="form-select"
+          id="projectAllocate"
+          data-placeholder="Wählen Sie eine Option"
+          multiple
+        ></select>
 
-            <!-- Modal Footer mit Buttons zum Speichern und Aktualisieren -->
-            <div class="modal-footer">
-                <button class="btn btn-primary" id="submit-button" type="submit">Speichern</button>
-                <button class="btn btn-primary d-none" id="update-button" type="submit">Projekt ändern</button>
-            </div>
-        </div>
+        <label for="description" class="form-label mt-4">Beschreibung</label>
+        <textarea
+          type="text"
+          id="description"
+          class="form-control"
+          rows="12"
+          class="form-control"
+        ></textarea>
+
+        <form method="post" enctype="multipart/form-data">
+          <div id="dropzone" class="dropzone d-none"></div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-primary" id="saveButtonProject" type="submit">
+          Speichern
+        </button>
+        <button
+          class="btn btn-primary d-none"
+          id="updateButtonProject"
+          type="submit"
+        >
+          Projekt ändern
+        </button>
+      </div>
     </div>
+  </div>
 </div>
-
-

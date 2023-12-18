@@ -2,90 +2,115 @@
 {% load user_tags %}
 
 <!DOCTYPE html>
-<html lang="en">
-<head>
-    <!-- Grundlegende Meta-Informationen -->
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-    <!-- Einbindung von Bootstrap und Font-Awesome -->
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/css/bootstrap.min.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" crossorigin="anonymous" referrerpolicy="no-referrer" />
-
-    <!-- Link zu Select2 CSS -->
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/select2@4.0.13/dist/css/select2.min.css" />
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/select2-bootstrap-5-theme@1.3.0/dist/select2-bootstrap-5-theme.min.css" />
-
-    <!-- Einbindung der eigenen CSS-Datei -->
-    <link rel="stylesheet" href="{% static 'css/main.css' %}">
-
-    <!-- Seitentitel -->
+<html lang="de">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/css/bootstrap.min.css"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css"
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/select2@4.0.13/dist/css/select2.min.css"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/select2-bootstrap-5-theme@1.3.0/dist/select2-bootstrap-5-theme.min.css"
+    />
+    <link rel="stylesheet" href="{% static 'css/webseite.css' %}" />
     <title>Real Estate Consulting</title>
-    <link rel="icon" type="image/png" href="{% static 'bilder/Logo.png' %}"/>
-    
-    <!--CSS Styles-->
-    {% block css %}{% endblock %}
-</head>
-<body>
-     <!-- Einbindung der Navigationsleiste -->
+    <link rel="icon" type="image/png" href="{% static 'bilder/Logo.png' %}" />
+    {% block css %}
+    {% endblock %}
+  </head>
+  <body>
     {% include 'webseite/navBar.html' %}
-
-    <!-- Platz für den Hauptinhalt der Seite -->
     {% block content %}
-
-    {% endblock content %}
-
-    <!-- Einbindung von jQuery und Bootstrap JavaScript -->
+    {% endblock content%}
     <script src="https://cdn.jsdelivr.net/npm/jquery@3.5.0/dist/jquery.slim.min.js"></script>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/js/bootstrap.bundle.min.js"></script>
-
-    <!-- Link zu Select2 JavaScript -->
     <script src="https://cdn.jsdelivr.net/npm/select2@4.0.13/dist/js/select2.full.min.js"></script>
-
-    <!-- Platz für zusätzliches JavaScript -->
-    {% block javasript %}{% endblock %}
-
-     <!-- Modal zum Löschen von Projekten -->
-    <div class="modal fade" id="exampleDelete" tabindex="-1" aria-labelledby="exampleDeleteLabel" aria-hidden="true">
-        <div class="modal-dialog">
+    {% block javasript %}
+    {% endblock %}
+    <div
+      class="modal fade"
+      id="deleteConfirmModal"
+      tabindex="-1"
+      aria-labelledby="deleteConfirmModalLabel"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog">
         <div class="modal-content">
-            <div class="modal-header">
-            <h5 class="modal-title" id="exampleDeleteLabel">Löschen</h5>
-            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                <div id="textDelate"></div>
-                <input type="hidden" id="proectDeleteID">
-            </div>
-            <div class="modal-footer">
-                <button type="button" id="delete-button" class="btn btn-primary">Löschen</button>
-            </div>
+          <div class="modal-header">
+            <h5 class="modal-title" id="deleteConfirmModalLabel">Löschen</h5>
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="modal"
+              aria-label="Close"
+            ></button>
+          </div>
+          <div class="modal-body">
+            <div id="textDelete"></div>
+            <input type="hidden" id="projectDeleteID" />
+          </div>
+          <div class="modal-footer">
+            <button
+              type="button"
+              id="confirmDeleteButton"
+              class="btn btn-primary"
+            >
+              Löschen
+            </button>
+          </div>
         </div>
-        </div>
+      </div>
     </div>
-
-    <!-- Modal zum Löschen von Kommentaren -->
-    <div class="modal fade" id="exampleDeleteComment" tabindex="-1" aria-labelledby="exampleDeleteCommentLabel" aria-hidden="true">
-        <div class="modal-dialog">
+    <div
+      class="modal fade"
+      id="commentDeleteConfirmModal"
+      tabindex="-1"
+      aria-labelledby="commentDeleteConfirmModalLabel"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog">
         <div class="modal-content">
-            <div class="modal-header">
-            <h5 class="modal-title" id="exampleDeleteCommentLabel">Löschen</h5>
-            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                <div id="textDelateCommment"></div>
-                <input type="hidden" id="commentDeleteID">
-                <input type="hidden" id="projektCommentID">
-            </div>
-            <div class="modal-footer">
-                <button type="button" id="comment-delete" class="btn btn-primary">Löschen</button>
-            </div>
+          <div class="modal-header">
+            <h5 class="modal-title" id="commentDeleteConfirmModalLabel">
+              Löschen
+            </h5>
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="modal"
+              aria-label="Close"
+            ></button>
+          </div>
+          <div class="modal-body">
+            <div id="textDeleteCommment"></div>
+            <input type="hidden" id="commentDeleteID" />
+            <input type="hidden" id="projektCommentID" />
+          </div>
+          <div class="modal-footer">
+            <button
+              type="button"
+              id="commentDeleteButton"
+              class="btn btn-primary"
+            >
+              Löschen
+            </button>
+          </div>
         </div>
-        </div>
+      </div>
     </div>
-
-
-</body>
+  </body>
 </html>

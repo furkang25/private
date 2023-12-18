@@ -5,83 +5,112 @@
 
 <!DOCTYPE html>
 <html lang="de">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Herzlich Willkommen</title>
-    <link rel="stylesheet" href="{% static 'css/aktuelles.css' %}">
-</head>
-<body>
+    <link rel="stylesheet" href="{% static 'css/aktuelles.css' %}" />
+  </head>
+  <body>
     <div class="welcome-section">
-        <h1 class="welcome-message">Herzlich Willkommen, {% get_username user_id %}!</h1>
-        <p class="welcome-message2">Hier finden Sie alle Informationen zu unseren Projekten und Dokumenten.</p>
+      <h1 class="welcome-message">
+        Herzlich Willkommen, {% get_username user_id %}!
+      </h1>
+      <p class="welcome-message">
+        Hier finden Sie alle Informationen zu unseren Projekten und Dokumenten.
+      </p>
 
-        <div class="slideshow-container">
-            <div class="slide">
-                <img src="{% static 'bilder/Bild1.jpeg' %}" alt="Bild 1">
-            </div>
-            <div class="slide">
-                <img src="{% static 'bilder/Bild2.jpeg' %}" alt="Bild 2">
-            </div>
-            <div class="slide">
-                <img src="{% static 'bilder/Bild3.jpeg' %}" alt="Bild 3">
-            </div>
+      <div class="slideshow-container">
+        <div class="slide">
+          <img src="{% static 'bilder/Bild1.jpeg' %}" alt="Bild 1" />
         </div>
+        <div class="slide">
+          <img src="{% static 'bilder/Bild2.jpeg' %}" alt="Bild 2" />
+        </div>
+        <div class="slide">
+          <img src="{% static 'bilder/Bild3.jpeg' %}" alt="Bild 3" />
+        </div>
+      </div>
     </div>
     <div class="button-container">
-        <div class="button-card">
-            <h4>Neues Projekt</h4>
-            <p>Erstellen Sie ein neues Projekt.</p>
-            <a href="{% url 'projects:project_view_list' %}?projekt_open_modal=true" class="btn btn-primary">Hinzufügen</a>
-        </div>
+      <div class="button-card">
+        <h4>Neues Projekt</h4>
+        <p>Erstellen Sie ein neues Projekt.</p>
+        <a
+          href="{% url 'projects:project_view_list' %}?projekt_open_modal=true"
+          class="btn btn-primary"
+          >Hinzufügen</a
+        >
+      </div>
 
-        <div class="button-card">
-            <h4>Meine Projekte</h4>
-            <p>Verwalten Sie Ihre persönlichen Projekte.</p>
-            <a href="{% url 'projects:project_view_list' %}?meine_projekte=true" class="btn btn-primary">Verwalten</a>
-        </div>
+      <div class="button-card">
+        <h4>Meine Projekte</h4>
+        <p>Verwalten Sie Ihre persönlichen Projekte.</p>
+        <a
+          href="{% url 'projects:project_view_list' %}?meine_projekte=true"
+          class="btn btn-primary"
+          >Verwalten</a
+        >
+      </div>
 
-        <div class="button-card">
-            <h4>Alle Projekte</h4>
-            <p>Sehen Sie sich unsere aktuellen Immobilienprojekte an.</p>
-            <a href="{% url 'projects:project_view_list' %}?projekte" class="btn btn-primary">Alle anzeigen</a>
-        </div>
+      <div class="button-card">
+        <h4>Alle Projekte</h4>
+        <p>Sehen Sie sich unsere aktuellen Immobilienprojekte an.</p>
+        <a
+          href="{% url 'projects:project_view_list' %}?projekte"
+          class="btn btn-primary"
+          >Alle anzeigen</a
+        >
+      </div>
 
-        <div class="button-card">
-            <h4>Neues Dokument</h4>
-            <p>Fügen Sie neue Dokumente hinzu.</p>
-            <a href="{% url 'documents:documents_view_list' %}?documents_open_modal=true" class="btn btn-primary">Hinzufügen</a>
-        </div>
+      <div class="button-card">
+        <h4>Neues Dokument</h4>
+        <p>Fügen Sie neue Dokumente hinzu.</p>
+        <a
+          href="{% url 'documents:documents_view_list' %}?documents_open_modal=true"
+          class="btn btn-primary"
+          >Hinzufügen</a
+        >
+      </div>
 
-        <div class="button-card">
-            <h4>Meine Dokumente</h4>
-            <p>Verwalten Sie Ihre persönlichen Dokumente.</p>
-            <a href="{% url 'documents:documents_view_list' %}?meine_documente=true" class="btn btn-primary">Verwalten</a>
-        </div>
+      <div class="button-card">
+        <h4>Meine Dokumente</h4>
+        <p>Verwalten Sie Ihre persönlichen Dokumente.</p>
+        <a
+          href="{% url 'documents:documents_view_list' %}?meine_documente=true"
+          class="btn btn-primary"
+          >Verwalten</a
+        >
+      </div>
 
-        <div class="button-card">
-            <h4>Alle Dokumente</h4>
-            <p>Sehen Sie sich das Dokumentenarchiv an.</p>
-            <a href="{% url 'documents:documents_view_list' %}?alle_documente=true" class="btn btn-primary">Alle anzeigen</a>
-        </div>
+      <div class="button-card">
+        <h4>Alle Dokumente</h4>
+        <p>Sehen Sie sich das Dokumentenarchiv an.</p>
+        <a
+          href="{% url 'documents:documents_view_list' %}?alle_documente=true"
+          class="btn btn-primary"
+          >Alle anzeigen</a
+        >
+      </div>
     </div>
-    
-    <script>
-        var slideIndex = 0;
-        function showSlides() {
-            var slides = document.getElementsByClassName("slide");
-            for (var i = 0; i < slides.length; i++) {
-                slides[i].style.display = "none";
-            }
-            slideIndex++;
-            if (slideIndex > slides.length) { slideIndex = 1 }
-            slides[slideIndex-1].style.display = "block";
-            setTimeout(showSlides, 2500); // Bild alle 2 Sekunden wechseln
-        }
-        showSlides();
-    </script>
 
-</body>
+    <script>
+      var slideIndex = 0;
+      function showSlides() {
+        var slides = document.getElementsByClassName("slide");
+        for (var i = 0; i < slides.length; i++) {
+          slides[i].style.display = "none";
+        }
+        slideIndex++;
+        if (slideIndex > slides.length) {
+          slideIndex = 1;
+        }
+        slides[slideIndex - 1].style.display = "block";
+        setTimeout(showSlides, 2500);
+      }
+      showSlides();
+    </script>
+  </body>
 </html>
 
 {% endblock content %}
