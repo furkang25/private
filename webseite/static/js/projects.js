@@ -1,27 +1,8 @@
 $(document).ready(function () {
-  function projectParameterRemove() {
-    if (window.location.search.indexOf("projekt_open_modal=true") !== -1) {
-      var newUrl = window.location.href.replace("?projekt_open_modal=true", "");
-      history.pushState({}, document.title, newUrl);
-      location.reload();
-    }
-  }
 
   var myDropzone;
-  Dropzone.options.dropzone = {
-    init: function () {
-      myDropzone = this;
-    },
-  };
 
-  $("#closProjekt").click(function () {
-    projectParameterRemove();
-    if (myDropzone) {
-      myDropzone.disable();
-      myDropzone.removeAllFiles();
-    }
-  });
-
+  // Abrufen eines Cookies anhand seines Namens
   const getCookie = (name) => {
     let cookieValue = null;
 
@@ -41,6 +22,32 @@ $(document).ready(function () {
   };
   const csrftoken = getCookie("csrftoken");
 
+  // Entfernen eines URL Parameters und Neuladen der Seite
+  function projectParameterRemove() {
+    if (window.location.search.indexOf("projekt_open_modal=true") !== -1) {
+      var newUrl = window.location.href.replace("?projekt_open_modal=true", "");
+      history.pushState({}, document.title, newUrl);
+      location.reload();
+    }
+  }
+
+  // Konfiguration der Dropzone Optionen
+  Dropzone.options.dropzone = {
+    init: function () {
+      myDropzone = this;
+    },
+  };
+
+  // Entfernung von URL-Parametern beim Klicken auf ein Element
+  $("#closeProjekt").click(function () {
+    projectParameterRemove();
+    if (myDropzone) {
+      myDropzone.disable();
+      myDropzone.removeAllFiles();
+    }
+  });
+
+  // Öffnen eines Modals, wenn ein URL Parameter vorhanden ist
   function openModalIfParameterExists() {
     var urlParams = new URLSearchParams(window.location.search);
     var openModal = urlParams.get("projekt_open_modal");
@@ -51,6 +58,7 @@ $(document).ready(function () {
   }
   openModalIfParameterExists();
 
+  // Löschen eines Projekts
   function deleteProject(projectId) {
     var viewCreatorProject = $("#viewCreatorProject");
     var viewNameProject = $("#viewNameProject");
@@ -77,20 +85,20 @@ $(document).ready(function () {
           console.error("Fehler beim Löschen des Projektes.");
         }
       },
-      error: function () {
-        console.error("Fehler bei der Ajax-Anfrage.");
-      },
+      error: function () {},
     });
   }
 
+  // Bestätigung des Projektlöschens
   $("#confirmDeleteButton").on("click", function () {
     var project_id = $("#projectDeleteID").val();
     console.log(project_id);
     deleteProject(project_id);
   });
 
+  // Bestätigung des Projektlöschens durch Papierkorb Icon
   $("#trashDelete").on("click", function () {
-    var project_id = $("#updateProjekt").attr("data-projekt-id");
+    var project_id = $("#updateProject").attr("data-project-id");
 
     $.ajax({
       url: `/project/delete/${project_id}/`,
@@ -104,27 +112,26 @@ $(document).ready(function () {
           );
           $("#deleteConfirmModal").modal("show");
         } else {
-          console.error("Projektname konnte nicht abgerufen werden.");
+          console.error("Fehler beim Löschen des Projektes.");
         }
       },
-      error: function () {
-        console.error("Fehler bei der Ajax-Anfrage.");
-      },
+      error: function () {},
     });
   });
 
-  $("#updateProjekt").on("click", function () {
+  // Aktualisieren von Projektdaten im Modal 
+  $("#updateProject").on("click", function () {
     $("#saveButtonProject").addClass("d-none");
     $("#updateButtonProject").removeClass("d-none");
     $("#createProject").modal("show");
 
-    var project_id = $(this).attr("data-projekt-id");
+    var project_id = $(this).attr("data-project-id");
 
     $.ajax({
       url: "/project/project-detail/" + project_id + "/",
       method: "GET",
       success: function (data) {
-        $("#projektname").val(data.name);
+        $("#projectName").val(data.name);
         $("#description").val(data.description);
 
         var projectUsers = data.project_users;
@@ -163,20 +170,20 @@ $(document).ready(function () {
         });
       },
       error: function () {
-        console.log("Fehler beim Abrufen der Projektdaten.");
+        console.log("Fehler bei der Aktualisierung des Projektes.");
       },
     });
   });
 
+  // Aktualisieren von Projektdaten im Modal durch Edit Icon
   $("#updateButtonProject").on("click", function () {
-    var project_id = $("#updateProjekt").attr("data-projekt-id");
-    var projektName = $("#projektname").val();
-    var teamId = $("#team_id").val();
+    var project_id = $("#updateProject").attr("data-project-id");
+    var projectName = $("#projectName").val();
     var description = $("#description").val();
 
     var selectedUsers = $("#projectAllocate").val();
     var updatedData = {
-      name: projektName,
+      name: projectName,
       selected_users: selectedUsers,
       description: description,
     };
@@ -192,19 +199,18 @@ $(document).ready(function () {
       success: function (data) {
         if (data.message) {
           updateProjectList();
-          detailViewProjekt(project_id);
+          detailViewProject(project_id);
           $("#createProject").modal("hide");
         } else {
           console.error("Fehler bei der Aktualisierung des Projektes.");
         }
       },
-      error: function () {
-        console.error("Fehler bei der Ajax-Anfrage.");
-      },
+      error: function () {},
     });
   });
 
-  function checkWatchlistStatus(user, project) {
+  // Überprüfung des Beobachtungsliste von Projekte
+  function projectsCheckWatchlistStatus(user, project) {
     var user_id = user;
     var project_id = project;
 
@@ -219,15 +225,16 @@ $(document).ready(function () {
       success: function (data) {
         var iconElement = document.getElementById("bookmarkId");
         if (data.is_on_watchlist) {
-          iconElement.classList.add("isWatchlist");
+          iconElement.classList.add("inWatchlist");
         } else {
-          iconElement.classList.remove("isWatchlist");
+          iconElement.classList.remove("inWatchlist");
         }
       },
-      error: function (error) {},
+      error: function () {},
     });
   }
 
+  // Projekt zur Beobachtungsliste hinzufügen oder entfernen
   $("#bookmarkForm").on("click", ".project", function () {
     var project_id = $(this).attr("projectBookmark");
     var user_id = $("#userId").val();
@@ -240,7 +247,7 @@ $(document).ready(function () {
         "X-CSRFToken": csrftoken,
       },
       success: function (data) {
-        checkWatchlistStatus(user_id, project_id);
+        projectsCheckWatchlistStatus(user_id, project_id);
         if (data.action === "add") {
         } else if (data.action === "remove") {
         }
@@ -252,8 +259,9 @@ $(document).ready(function () {
     });
   });
 
-  function detailViewProjekt(project_id) {
-    $("[data-projekt]").removeClass("active");
+  // Projekt Detailansicht
+  function detailViewProject(project_id) {
+    $("[data-project]").removeClass("active");
     var viewCreatorProject = $("#viewCreatorProject");
     var viewNameProject = $("#viewNameProject");
     var viewDescriptionProject = $("#viewDescriptionProject");
@@ -262,14 +270,14 @@ $(document).ready(function () {
     $(".project").attr("projectBookmark", project_id);
     $(".myHideClass").removeClass("d-none");
     $(".myViewClass").addClass("d-none");
-    $("#updateProjekt").attr("data-projekt-id", project_id);
+    $("#updateProject").attr("data-project-id", project_id);
 
     $.ajax({
       url: "/project/project-detail/" + project_id + "/",
       method: "GET",
       success: function (data) {
         $("#commentOutput").empty();
-        var elementToActivate = $('[data-projekt="' + project_id + '"]');
+        var elementToActivate = $('[data-project="' + project_id + '"]');
         elementToActivate.addClass("active");
 
         data.comments.forEach(function (document) {
@@ -295,24 +303,24 @@ $(document).ready(function () {
         });
 
         var userLogin = $("#userId").val();
-        checkWatchlistStatus(userLogin, project_id);
+        projectsCheckWatchlistStatus(userLogin, project_id);
         viewCreatorProject.text(data.username);
         viewDescriptionProject.text(data.description);
         viewNameProject.text(data.name);
         console.log(data.can_edit);
 
         if (data.can_edit) {
-          $("#updateProjekt").removeClass("d-none");
+          $("#updateProject").removeClass("d-none");
           $("#createComment").removeClass("d-none");
         } else {
           $("#trashDelete").addClass("d-none");
-          $("#updateProjekt").addClass("d-none");
+          $("#updateProject").addClass("d-none");
         }
 
         if (data.can_delete) {
           $("#createComment").removeClass("d-none");
           $("#trashDelete").removeClass("d-none");
-          $("#updateProjekt").removeClass("d-none");
+          $("#updateProject").removeClass("d-none");
         }
 
         var count = 0;
@@ -349,9 +357,10 @@ $(document).ready(function () {
     });
   }
 
+
   $("#projectList").on("click", ".list-view", function () {
-    var project_id = $(this).attr("data-projekt");
-    detailViewProjekt(project_id);
+    var project_id = $(this).attr("data-project");
+    detailViewProject(project_id);
   });
 
   function updateProjectList(
@@ -378,7 +387,7 @@ $(document).ready(function () {
           $.each(projects, function (index, project) {
             if (project.is_on_watchlist) {
               var projectListHtml = `
-                            <a href="javascript:void(0);" data-projekt="${project.id}" class="list-group-item list-view list-group-item-action py-3 lh-tight">
+                            <a href="javascript:void(0);" data-project="${project.id}" class="list-group-item list-view list-group-item-action py-3 lh-tight">
                                 <div class="d-flex w-100 align-items-center justify-content-between">
                                     <strong class="mb-1">${project.name}</strong>
                                     <span class="bookmark-icon2">&#9733;</span> <!-- Stern-Symbol -->
@@ -396,7 +405,7 @@ $(document).ready(function () {
               ? 'style="color:red;"'
               : "";
             var projectListHtml = `
-              <a href="javascript:void(0);" data-projekt="${project.id}" class="list-group-item list-view list-group-item-action py-3 lh-tight ${extraClass}">
+              <a href="javascript:void(0);" data-project="${project.id}" class="list-group-item list-view list-group-item-action py-3 lh-tight ${extraClass}">
                   <div class="d-flex w-100 align-items-center justify-content-between">
                       <strong class="mb-1">${project.name}</strong>
                       <span class="bookmark-icon" ${bookmarkStyle}>&#9733;</span> <!-- Stern-Symbol mit optionalem roten Stil -->
@@ -461,9 +470,9 @@ $(document).ready(function () {
     resetMeineProjekteParameter();
   });
 
-  $("#closProjekt").on("click", function () {
-    $("#projektname").val("");
-    $("#team").val("");
+  $("#closeProjekt").on("click", function () {
+    $("#projectName").val("");
+    $("#toAssign").val("");
     $("#description").val("");
     var myDropzone = Dropzone.forElement("#dropzone");
     myDropzone.removeAllFiles();
@@ -480,7 +489,7 @@ $(document).ready(function () {
       return;
     }
     var user_id = $("#user_id").val();
-    var projektname = $("#projektname").val();
+    var projectName = $("#projectName").val();
     var selectedUsers = $("#projectAllocate").val();
     var description = $("#description").val();
 
@@ -496,7 +505,7 @@ $(document).ready(function () {
       },
       data: {
         user_id: user_id,
-        projektname: projektname,
+        projectName: projectName,
         selected_users: selectedUsers,
         description: description,
       },
@@ -556,8 +565,8 @@ $(document).ready(function () {
     setTimeout(performAjaxSearch, 100);
   });
   function performAjaxSearch() {
-    var valprojektname = $("#projektname").val();
-    if (valprojektname === "") {
+    var valprojectName = $("#projectName").val();
+    if (valprojectName === "") {
       $.ajax({
         method: "GET",
         url: "/project/autocomplete/user/",
@@ -592,12 +601,12 @@ $(document).ready(function () {
   }
 
   function validateForm() {
-    var projektname = $("#projektname").val();
+    var projectName = $("#projectName").val();
     var description = $("#description").val();
     var selectedUsers = $("#projectAllocate").val();
 
-    if (!projektname || projektname.trim() === "") {
-      displayErrorMessage("Projektnamen ist erforderlich.");
+    if (!projectName || projectName.trim() === "") {
+      displayErrorMessage("projectNamen ist erforderlich.");
       return false;
     }
     if (!description || description.trim() === "") {
@@ -607,7 +616,7 @@ $(document).ready(function () {
     return true;
   }
 
-  $("#projektname, #description, #projectAllocate").on(
+  $("#projectName, #description, #projectAllocate").on(
     "input change",
     function () {
       hideErrorMessage();

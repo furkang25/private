@@ -17,14 +17,14 @@ from webseite.models import UserProfile
 class ProjectCreateView(View):
     def post(self, request):
         user_id = request.POST.get("user_id")
-        projektname = request.POST.get("projektname")
+        projectName = request.POST.get("projectName")
         description = request.POST.get("description")
         selected_users = request.POST.getlist("selected_users[]")
         print(selected_users)
         user = UserProfile.objects.get(id=user_id)
 
         project = Project(
-            name=projektname,
+            name=projectName,
             user_id=user_id,
             description=description,
             create=timezone.now(),

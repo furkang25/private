@@ -25,13 +25,13 @@
     background-color: #45818e33;
 }
 
-.document-bookmark {
+.documentBookmark {
     font-size: 1.5rem;
     color: #45818e;
     cursor: pointer;
 }
 
-.document-bookmark:hover {
+.documentBookmark:hover {
     font-size: 1.5rem;
     color: #6d6d6d;
     cursor: pointer;
@@ -58,7 +58,7 @@
     margin-bottom: 10px;
 }
 
-.isWatchlist {
+.inWatchlist {
     color: red;
   }
 

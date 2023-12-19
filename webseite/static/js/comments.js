@@ -117,12 +117,14 @@ $(document).ready(function () {
     });
   }
 
+  // Kommentar Erstellung in einer Webanwendung
   $("#createComment").on("click", function () {
     var projectId = $("#bookmarkId").attr("projectBookmark");
     $("#project_id").val(projectId);
     $("#comment").modal("show");
   });
 
+  // Kommentar zu einem bestimmten Projekt zu erfassen
   $("#submitComment").on("click", function (e) {
     e.preventDefault();
     var projectId = $("#project_id").val();
@@ -130,6 +132,7 @@ $(document).ready(function () {
     createComment(projectId, commentText);
   });
 
+  // Kommentar zur Bearbeitung in einem Modal-Fenster anzuzeigen
   $("body").on("click", ".changeComment-data", function () {
     $("#changeComment").removeClass("d-none");
     $("#submitComment").addClass("d-none");
@@ -142,6 +145,7 @@ $(document).ready(function () {
     $("#comment").modal("show");
   });
 
+  // bestehenden Kommentar in einem Projekt zu aktualisieren
   $("#changeComment").on("click", function () {
     var projectId = $("#project_id").val();
     var commentId = $("#comment_id").val();
@@ -149,6 +153,7 @@ $(document).ready(function () {
     updateComment(projectId, commentId, commentText);
   });
 
+  // Bestätigung für die Löschung eines Kommentars
   $("body").on("click", ".commentDeleteButton-data", function () {
     $(this).closest(".col-12").find(".commentText").css("color", "red");
     $("#textDeleteCommment").text("Kommentar löschen bestätigen");
@@ -159,16 +164,19 @@ $(document).ready(function () {
     $("#commentDeleteConfirmModal").modal("show");
   });
 
+  // Löschvorgang eines Kommentars in einem Projekt
   $("#commentDeleteButton").on("click", function () {
     var commentId = $("#commentDeleteID").val();
     var projectId = $("#projektCommentID").val();
     deleteComment(commentId, projectId);
   });
 
+ // Kommentar Modal zurückzusetzen
   $("#commentCloseModal").on("click", function () {
     $("#commentForm").val("");
     $("#user_id").val("");
     $("#project_id").val("");
     $("#comment_id").val("");
   });
+
 });
