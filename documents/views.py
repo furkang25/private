@@ -36,10 +36,9 @@ class DocumentCreateView(View):
                 )
                 document.save()
 
-            return JsonResponse({"message": "Dokument erfolgreich erstellt."})
-
-        except Exception as e:
-            return JsonResponse({"message": "Fehler beim Hochladen des Dokumentes."})
+            return JsonResponse({"message": "Dokument erfolgreich hochgeladen."}, status=201)
+        except:
+            return JsonResponse({"error": "Fehler beim Hochladen des Dokumentes."}, status=400)
 
 
 # Dokument aktualisieren
@@ -85,12 +84,9 @@ class DocumentUpdateView(View):
 
             document.save()
 
-            return JsonResponse({"message": "Dokument erfolgreich aktualisiert."})
-
+            return JsonResponse({"message": "Dokument erfolgreich aktualisiert."}, status=200)
         except:
-            return JsonResponse(
-                {"error": "Fehler bei der Aktualisierung des Dokumentes."}, status=404
-            )
+            return JsonResponse({"error": "Fehler bei der Aktualisierung des Dokumentes."}, status=400)
 
 
 # Dokument löschen
@@ -100,10 +96,9 @@ class DocumentDeleteView(View):
             document = get_object_or_404(Documents, pk=pk)
             document.delete()
 
-            return JsonResponse({"message": "Dokument erfolgreich gelöscht."})
-
-        except Exception as e:
-            return JsonResponse({"message": "Fehler beim Löschen des Dokumentes."})
+            return JsonResponse({"message": "Dokument erfolgreich gelöscht."}, status=204)
+        except:
+            return JsonResponse({"error": "Fehler beim Löschen des Dokumentes."}, status=400)
 
 
 # Dokumente filtern
@@ -194,7 +189,6 @@ class DocumentFilterView(View):
             "page_number": page_data.number,
             "page_count": paginator.num_pages,
         }
-
         return JsonResponse(response_data)
 
 
@@ -219,10 +213,9 @@ class TagCreateView(View):
             tag = Tags(name=tagFormTag, user=request.user)
             tag.save()
 
-            return JsonResponse({"message": "Tag erfolgreich erstellt."})
-
-        except Exception as e:
-            return JsonResponse({"message": "Fehler beim Erstellen des Tags."})
+            return JsonResponse({"message": "Tag erfolgreich erstellt."}, status=201)
+        except:
+            return JsonResponse({"error": "Fehler beim Erstellen des Tags."}, status=400)
 
 
 # Tag aktualisieren
@@ -234,10 +227,9 @@ class TagUpdateView(View):
             tag.name = name
             tag.save()
 
-            return JsonResponse({"message": "Tag wurde erfolgreich aktualisiert."})
-
-        except Exception as e:
-            return JsonResponse({"message": "Fehler beim Aktualisieren des Tags."})
+            return JsonResponse({"message": "Tag wurde erfolgreich aktualisiert."}, status=200)
+        except Exception:
+            return JsonResponse({"error": "Fehler beim Aktualisieren des Tags."}, status=400)
 
 
 # Tag löschen
@@ -247,10 +239,9 @@ class TagDeleteView(View):
             tag = get_object_or_404(Tags, pk=pk)
             tag.delete()
 
-            return JsonResponse({"message": "Tag erfolgreich gelöscht."})
-
-        except Exception as e:
-            return JsonResponse({"message": "Fehler beim Löschen des Tags."})
+            return JsonResponse({"message": "Tag erfolgreich gelöscht."}, status=204)
+        except Exception:
+            return JsonResponse({"error": "Fehler beim Löschen des Tags."}, status=400)
 
 
 # Ansicht aller Tags
@@ -313,7 +304,6 @@ class DocumentArchiveView(View):
             "user_id": request.user.id,
             "tags": tags,
         }
-
         return render(request, template_name, context)
 
 

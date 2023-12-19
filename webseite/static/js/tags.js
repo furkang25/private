@@ -1,10 +1,15 @@
 $(document).ready(function () {
+
+  // Abrufen eines Cookies anhand seines Namens
   const getCookie = (name) => {
     let cookieValue = null;
+
     if (document.cookie && document.cookie !== "") {
       const cookies = document.cookie.split(";");
+
       for (let i = 0; i < cookies.length; i++) {
         const cookie = cookies[i].trim();
+
         if (cookie.substring(0, name.length + 1) === name + "=") {
           cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
           break;
@@ -14,6 +19,8 @@ $(document).ready(function () {
     return cookieValue;
   };
   const csrftoken = getCookie("csrftoken");
+
+  // Formular wird abgesendet wenn geklickt wurde
   $("#submitTags").on("click", function (e) {
     e.preventDefault();
 
@@ -40,6 +47,7 @@ $(document).ready(function () {
     });
   });
 
+  // Verwaltung von Tags
   $("#manageTags").on("click", function () {
     $("#manageTagsUpdate").modal("show");
 
@@ -56,18 +64,19 @@ $(document).ready(function () {
                 <div class="input-group mt-3">
                     <input type="text" class="form-control" id="tagFormTagVal${item.id}" value="${item.name}">
                     <button data-tags-edit="${item.id}" class="btn btn-outline-secondary tagsEdit" type="button">Speichern</button>
-                    <button data-tags-delete="${item.id}" class="btn btn-outline-danger tagsDelste" type="button">Löschen</button>
+                    <button data-tags-delete="${item.id}" class="btn btn-outline-danger tagsDelete" type="button">Löschen</button>
                 </div>
                 `;
           tagsResultsDiv.append(html);
         });
       },
       error: function () {
-        console.error("Fehler beim Laden der Tags.");
+        console.error("Fehler beim Verwaltung von eines Tags.");
       },
     });
   });
 
+  // Aktualisieren von Tags
   $("body").on("click", ".tagsEdit", function () {
     var tagsId = $(this).attr("data-tags-edit");
     var tagFormTagVal = $("#tagFormTagVal" + tagsId).val();
@@ -90,12 +99,13 @@ $(document).ready(function () {
         }, 100);
       },
       error: function () {
-        console.error("Fehler bei der Ajax-Anfrage.");
+        console.error("Fehler beim Aktualisieren von eines Tags.");
       },
     });
   });
 
-  $("body").on("click", ".tagsDelste", function () {
+  // Löschen von Tags
+  $("body").on("click", ".tagsDelete", function () {
     var tagsId = $(this).attr("data-tags-delete");
 
     $.ajax({
@@ -111,8 +121,9 @@ $(document).ready(function () {
         }, 100);
       },
       error: function () {
-        console.error("Fehler bei der Ajax-Anfrage.");
+        console.error("Fehler beim Löschen von eines Tags.");
       },
     });
   });
+  
 });

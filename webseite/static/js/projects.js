@@ -1,6 +1,7 @@
 $(document).ready(function () {
 
   var myDropzone;
+  var projectId;
 
   // Abrufen eines Cookies anhand seines Namens
   const getCookie = (name) => {
@@ -24,8 +25,8 @@ $(document).ready(function () {
 
   // Entfernen eines URL Parameters und Neuladen der Seite
   function projectParameterRemove() {
-    if (window.location.search.indexOf("projekt_open_modal=true") !== -1) {
-      var newUrl = window.location.href.replace("?projekt_open_modal=true", "");
+    if (window.location.search.indexOf("project_open_modal=true") !== -1) {
+      var newUrl = window.location.href.replace("?project_open_modal=true", "");
       history.pushState({}, document.title, newUrl);
       location.reload();
     }
@@ -39,7 +40,7 @@ $(document).ready(function () {
   };
 
   // Entfernung von URL-Parametern beim Klicken auf ein Element
-  $("#closeProjekt").click(function () {
+  $("#closeProject").click(function () {
     projectParameterRemove();
     if (myDropzone) {
       myDropzone.disable();
@@ -50,7 +51,7 @@ $(document).ready(function () {
   // Öffnen eines Modals, wenn ein URL Parameter vorhanden ist
   function openModalIfParameterExists() {
     var urlParams = new URLSearchParams(window.location.search);
-    var openModal = urlParams.get("projekt_open_modal");
+    var openModal = urlParams.get("project_open_modal");
     if (openModal === "true") {
       $("#createProject").modal("show");
       performAjaxSearch();
@@ -357,12 +358,13 @@ $(document).ready(function () {
     });
   }
 
-
+  // Projektauswahl in der Projektliste
   $("#projectList").on("click", ".list-view", function () {
     var project_id = $(this).attr("data-project");
     detailViewProject(project_id);
   });
 
+  // Aktualisierung der Projektliste
   function updateProjectList(
     searchQuery = "",
     userProjects = false,
@@ -423,24 +425,28 @@ $(document).ready(function () {
     });
   }
 
+  // Projekt Suchfunktion
   $("#searchProject").on("input", function () {
     var searchQuery = $(this).val();
     updateProjectList(searchQuery);
   });
 
+  // Abrufen von URL Parametern
   function getUrlParameter(parameterName) {
     var urlParams = new URLSearchParams(window.location.search);
     return urlParams.get(parameterName);
   }
 
-  var meineProjekteParameter = getUrlParameter("meine_projekte");
-  if (meineProjekteParameter === "true") {
+  // Abfrage des URL Parameter und Aktualisierung der Projektliste
+  var myProjectParameter = getUrlParameter("my_project");
+  if (myProjectParameter === "true") {
     var searchQuery = $("#searchProject").val();
     updateProjectList(searchQuery, true, false, false);
   } else {
     updateProjectList();
   }
 
+  // Aktualisierung der Projektliste auf Benutzeraktionen
   $(".nav-link-user-projects").on("click", function () {
     var searchQuery = $("#searchProject").val();
     updateProjectList(searchQuery, true);
@@ -460,17 +466,20 @@ $(document).ready(function () {
     $("#searchProject").val("");
   });
 
-  function resetMeineProjekteParameter() {
+  // Zurücksetzen des my_project Parameter
+  function resetmyProjectParameter() {
     var url = new URL(window.location.href);
-    url.searchParams.delete("meine_projekte");
+    url.searchParams.delete("my_project");
     window.location.href = url.toString();
   }
 
+  // Anzeige aller Projekte in der Projektliste
   document.getElementById("allProjects").addEventListener("click", function () {
-    resetMeineProjekteParameter();
+    resetmyProjectParameter();
   });
 
-  $("#closeProjekt").on("click", function () {
+  // Zurücksetzen und Schließen des Projektformulars
+  $("#closeProject").on("click", function () {
     $("#projectName").val("");
     $("#toAssign").val("");
     $("#description").val("");
@@ -481,7 +490,7 @@ $(document).ready(function () {
     location.reload();
   });
 
-  var projectId;
+  // Verarbeitung des Klicks auf die Speichern im Projektformular
   $("#saveButtonProject").on("click", function (e) {
     e.preventDefault();
 
@@ -532,6 +541,7 @@ $(document).ready(function () {
     });
   });
 
+  // Dropzone für Datei Upload im Projektformular
   function initializeDropzone() {
     Dropzone.autoDiscover = false;
     const myDropzone = new Dropzone("#dropzone", {
@@ -540,16 +550,16 @@ $(document).ready(function () {
         this.on("success", function (file, response) {
           updateProjectList();
           var urlParams = new URLSearchParams(window.location.search);
-          var openModal = urlParams.get("projekt_open_modal");
+          var openModal = urlParams.get("project_open_modal");
           if (openModal === "true") {
-            urlParams.delete("projekt_open_modal");
+            urlParams.delete("project_open_modal");
             var newUrl = window.location.pathname + "?" + urlParams.toString();
             window.history.replaceState({}, document.title, newUrl);
           }
         });
         console.log(projectId);
-        this.on("sending", function (file, xhr, formData) {
-          formData.append("csrfmiddlewaretoken", csrftoken);
+        this.on("sending", function (formData) {
+          formData.append("csrfMiddlewaretoken", csrftoken);
           formData.append("project_id", projectId);
         });
       },
@@ -560,10 +570,13 @@ $(document).ready(function () {
     });
   }
 
+  // Öffnen des Projektformular Modalfensters
   var myModal = $("#createProject");
   myModal.on("show.bs.modal", function (e) {
     setTimeout(performAjaxSearch, 100);
   });
+
+  // Durchführung einer Ajax Suche für Benutzerdaten
   function performAjaxSearch() {
     var valprojectName = $("#projectName").val();
     if (valprojectName === "") {
@@ -600,10 +613,10 @@ $(document).ready(function () {
     }
   }
 
+  // Validierung des Formulars
   function validateForm() {
     var projectName = $("#projectName").val();
     var description = $("#description").val();
-    var selectedUsers = $("#projectAllocate").val();
 
     if (!projectName || projectName.trim() === "") {
       displayErrorMessage("projectNamen ist erforderlich.");
@@ -616,6 +629,7 @@ $(document).ready(function () {
     return true;
   }
 
+  // ausgewählten HTML-Elementen zu
   $("#projectName, #description, #projectAllocate").on(
     "input change",
     function () {
@@ -623,12 +637,13 @@ $(document).ready(function () {
     }
   );
 
+  // Fehlermeldung auf der Webseite an
   function displayErrorMessage(message) {
     $("#errorAlert").text(message);
     $("#errorAlert").show();
   }
-
   function hideErrorMessage() {
     $("#errorAlert").hide();
   }
+
 });

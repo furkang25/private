@@ -149,7 +149,7 @@ $(document).ready(function () {
         $("#tagHiddenId").val(data.documents.tags_id);
         $("#DocumentTagForm").val(data.documents.tags_name);
         $("#documentNameForm").val(data.documents.name);
-        $("#documentesDelete").attr("data-documents-delete-id",data.documents.id);
+        $("#documentDeleteButton").attr("data-documents-delete-id",data.documents.id);
       },
       error: function () {
         console.error("Fehler beim Laden von Dokument Informationen.");
@@ -280,7 +280,7 @@ $(document).ready(function () {
     }
 
     $.ajax({
-      url: "/documents/list/",
+      url: "/documents/filter/",
       method: "GET",
       headers: {
         "X-CSRFToken": csrftoken,

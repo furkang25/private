@@ -16,32 +16,30 @@ from webseite.models import UserProfile
 # Projekt erstellen
 class ProjectCreateView(View):
     def post(self, request):
-        user_id = request.POST.get("user_id")
-        projectName = request.POST.get("projectName")
-        description = request.POST.get("description")
-        selected_users = request.POST.getlist("selected_users[]")
-        print(selected_users)
-        user = UserProfile.objects.get(id=user_id)
+        try:
+            user_id = request.POST.get("user_id")
+            projectName = request.POST.get("projectName")
+            description = request.POST.get("description")
+            selected_users = request.POST.getlist("selected_users[]")
+            print(selected_users)
+            user = UserProfile.objects.get(id=user_id)
 
-        project = Project(
-            name=projectName,
-            user_id=user_id,
-            description=description,
-            create=timezone.now(),
-            update=timezone.now(),
-        )
-        project.save()
+            project = Project(
+                name=projectName,
+                user_id=user_id,
+                description=description,
+                create=timezone.now(),
+                update=timezone.now(),
+            )
+            project.save()
 
-        for username in selected_users:
-            user = UserProfile.objects.get(user__username=username)
-            user.projects.add(project)
+            for username in selected_users:
+                user = UserProfile.objects.get(user__username=username)
+                user.projects.add(project)
 
-        return JsonResponse(
-            {
-                "message": "Projekt wurde erfolgreich gespeichert.",
-                "project_id": project.id,
-            }
-        )
+            return JsonResponse({"message": "Projekt erfolgreich erstellt."}, status=201)
+        except:
+            return JsonResponse({"error": "Fehler beim Erstellen des Projektes."}, status=400)
 
 
 # Projekt aktualisieren
@@ -65,25 +63,21 @@ class ProjectUpdateView(View):
 
             project.save()
 
-            return JsonResponse({"message": "Projekt erfolgreich aktualisiert."})
+            return JsonResponse({"message": "Projekt erfolgreich aktualisiert."}, status=200)
         except Project.DoesNotExist:
-            return JsonResponse({"error": "Projekt nicht gefunden."}, status=404)
+            return JsonResponse({"error": "Fehler bei der Aktualisierung des Projektes."}, status=400)
 
 
 # Projekt löschen
 class ProjectDeleteView(View):
-    def get(self, request, pk):
-        project = get_object_or_404(Project, pk=pk)
-
-        project_name = project.name
-        project_id = project.id
-        return JsonResponse({"project_name": project_name, "project_id": project_id})
-
     def post(self, request, pk):
-        project = get_object_or_404(Project, pk=pk)
-        project.delete()
+        try:
+            project = get_object_or_404(Project, pk=pk)
+            project.delete()
 
-        return JsonResponse({"message": "Projekt erfolgreich gelöscht."})
+            return JsonResponse({"message": "Projekt erfolgreich gelöscht."}, status=204)
+        except:
+            return JsonResponse({"error": "Projekt nicht gelöscht."}, status=400)
 
 
 # Dokument im Projekt hochladen
@@ -106,11 +100,9 @@ class UploadFilesView(View):
                 )
                 document.save()
 
-            return JsonResponse({"message": "Dateien erfolgreich hochgeladen."})
-        except Exception as e:
-            return JsonResponse(
-                {"error": "Fehler beim Hochladen der Dateien: " + str(e)}, status=500
-            )
+            return JsonResponse({"message": "Dokument wurde erfolgreich hochgeladen."}, status=201)
+        except:
+            return JsonResponse({"error": "Fehler beim Hochladen des Dokumentes: "}, status=400)
 
 
 # Projekte anzeigen lassen
@@ -162,7 +154,6 @@ class ProjectListView(View):
             }
             for project in projects
         ]
-
         return JsonResponse({"projects": project_data})
 
 
@@ -229,7 +220,6 @@ class ProjectDetailView(View):
                 "can_edit": can_edit_project,
                 "project_users": users_with_assignment,
             }
-
             return JsonResponse(project_data)
         except Project.DoesNotExist:
             return JsonResponse({"error": "Projekt nicht gefunden."}, status=404)
@@ -244,7 +234,6 @@ class ProjectListUserView(View):
         context = {
             "user_id": request.user.id,
         }
-
         return render(request, template_name, context)
 
 
@@ -268,9 +257,9 @@ class CommentCreateView(View):
             comment = Comment(user=request.user, text=text, project=project)
             comment.save()
 
-            return JsonResponse({"message": "Kommentar erfolgreich erstellt."})
-        except Exception as e:
-            return JsonResponse({"message": "Fehler beim Erstellen des Kommentars."})
+            return JsonResponse({"message": "Kommentar erfolgreich erstellt."}, status= 201)
+        except:
+            return JsonResponse({"error": "Fehler beim Erstellen des Kommentars."}, status=400)
 
 
 # Kommentar aktualisieren
@@ -284,18 +273,9 @@ class CommentUpdateView(View):
                 comment.text = text
                 comment.save()
 
-                return JsonResponse({"message": "Kommentar erfolgreich aktualisiert."})
-            else:
-                return JsonResponse(
-                    {
-                        "message": "Sie sind nicht berechtigt, diesen Kommentar zu aktualisieren."
-                    }
-                )
-        except Exception as e:
-            # Gibt eine Fehler-JSON-Antwort zurück
-            return JsonResponse(
-                {"message": "Fehler beim Aktualisieren des Kommentars."}
-            )
+            return JsonResponse({"message": "Kommentar erfolgreich aktualisiert."}, status=200)
+        except:
+            return JsonResponse({"error": "Fehler beim Aktualisieren des Kommentars."}, status=400)
 
 
 # Kommentar löschen
@@ -307,45 +287,33 @@ class CommentDeleteView(View):
             if comment.user == request.user:
                 comment.delete()
 
-                return JsonResponse({"message": "Kommentar erfolgreich gelöscht."})
-            else:
-                return JsonResponse(
-                    {
-                        "message": "Sie sind nicht berechtigt, diesen Kommentar zu löschen."
-                    }
-                )
-        except Exception as e:
-            return JsonResponse({"message": "Fehler beim Löschen des Kommentars."})
+            return JsonResponse({"message": "Kommentar erfolgreich gelöscht."}, status=204)
+        except:
+            return JsonResponse({"error": "Fehler beim Löschen des Kommentars."}, status=400)
 
 
 # Projekte markieren und in Markier-Liste hinzufügen
 class ProjectWatchlistView(View):
     def post(self, request):
+        user_id = request.POST.get("user_id")
+        project_id = request.POST.get("project_id")
+        user = None
+
         try:
-            user_id = request.POST.get("user_id")
-            project_id = request.POST.get("project_id")
-            user = None
+            user = ProjektWatch.objects.get(user_id=user_id)
+        except ProjektWatch.DoesNotExist:
+            user = ProjektWatch.objects.create(user_id=user_id)
 
-            try:
-                user = ProjektWatch.objects.get(user_id=user_id)
-            except ProjektWatch.DoesNotExist:
-                user = ProjektWatch.objects.create(user_id=user_id)
+        project = Project.objects.get(id=project_id)
 
-            project = Project.objects.get(id=project_id)
+        if project in user.watch_list_projects.all():
+            user.watch_list_projects.remove(project)
+            action = "remove"
+        else:
+            user.watch_list_projects.add(project)
+            action = "add"
 
-            if project in user.watch_list_projects.all():
-                user.watch_list_projects.remove(project)
-                action = "remove"
-            else:
-                user.watch_list_projects.add(project)
-                action = "add"
-
-            return JsonResponse({"action": action})
-
-        except User.DoesNotExist:
-            return JsonResponse({"error": "Benutzer nicht gefunden."}, status=404)
-        except Project.DoesNotExist as e:
-            return JsonResponse({"error": "Projekt nicht gefunden."}, status=404)
+        return JsonResponse({"action": action})
 
 
 # Überprüft, ob Projekt in Markier-Liste ist
@@ -358,6 +326,4 @@ class ProjectInWatchlistView(View):
 
             return JsonResponse({"is_on_watchlist": is_on_watchlist})
         except Project.DoesNotExist:
-            return JsonResponse(
-                {"error": "Benutzer oder Projekt nicht gefunden."}, status=404
-            )
+            return JsonResponse({"error": "Projekt nicht gefunden."}, status=404)
