@@ -1,6 +1,4 @@
 $(document).ready(function () {
-
-  // Abrufen eines Cookies anhand seines Namens
   const getCookie = (name) => {
     let cookieValue = null;
 
@@ -20,7 +18,7 @@ $(document).ready(function () {
   };
   const csrftoken = getCookie("csrftoken");
 
-  // Formular wird abgesendet wenn geklickt wurde
+  // tagFormTag Daten an Server senden, wenn submitTags geklickt wird
   $("#submitTags").on("click", function (e) {
     e.preventDefault();
 
@@ -47,7 +45,7 @@ $(document).ready(function () {
     });
   });
 
-  // Verwaltung von Tags
+  //Verwaltung von Tags, wenn manageTags geklickt wird
   $("#manageTags").on("click", function () {
     $("#manageTagsUpdate").modal("show");
 
@@ -71,12 +69,12 @@ $(document).ready(function () {
         });
       },
       error: function () {
-        console.error("Fehler beim Verwaltung von eines Tags.");
+        console.error("Fehler bei der Verwaltung eines Tags.");
       },
     });
   });
 
-  // Aktualisieren von Tags
+  // Aktualisieren von Tags, wenn tagsEdit geklickt wird
   $("body").on("click", ".tagsEdit", function () {
     var tagsId = $(this).attr("data-tags-edit");
     var tagFormTagVal = $("#tagFormTagVal" + tagsId).val();
@@ -99,12 +97,12 @@ $(document).ready(function () {
         }, 100);
       },
       error: function () {
-        console.error("Fehler beim Aktualisieren von eines Tags.");
+        console.error("Fehler beim Aktualisieren eines Tags.");
       },
     });
   });
 
-  // Löschen von Tags
+  // Löschen von Tags, wenn tagsDelete geklickt wird
   $("body").on("click", ".tagsDelete", function () {
     var tagsId = $(this).attr("data-tags-delete");
 
@@ -121,9 +119,8 @@ $(document).ready(function () {
         }, 100);
       },
       error: function () {
-        console.error("Fehler beim Löschen von eines Tags.");
+        console.error("Fehler beim Löschen eines Tags.");
       },
     });
   });
-  
 });

@@ -11,6 +11,7 @@ from django.db.models import Q
 from django.contrib.auth.decorators import login_required
 from django.utils.decorators import method_decorator
 from webseite.models import UserProfile
+from .models import Project
 
 
 # Projekt erstellen
@@ -37,9 +38,10 @@ class ProjectCreateView(View):
                 user = UserProfile.objects.get(user__username=username)
                 user.projects.add(project)
 
-            return JsonResponse({"message": "Projekt erfolgreich erstellt."}, status=201)
+            return JsonResponse(
+                {"message": "Projekt wurde erfolgreich erstellt.","project_id": project.id,}, status=201)
         except:
-            return JsonResponse({"error": "Fehler beim Erstellen des Projektes."}, status=400)
+            return JsonResponse({"error": "Fehler beim Erstellen des Projektes: "}, status=400)
 
 
 # Projekt aktualisieren
@@ -63,22 +65,30 @@ class ProjectUpdateView(View):
 
             project.save()
 
-            return JsonResponse({"message": "Projekt erfolgreich aktualisiert."}, status=200)
+            return JsonResponse(
+                {"message": "Projekt erfolgreich aktualisiert."}, status=200
+            )
         except Project.DoesNotExist:
-            return JsonResponse({"error": "Fehler bei der Aktualisierung des Projektes."}, status=400)
+            return JsonResponse(
+                {"error": "Fehler bei der Aktualisierung des Projektes."}, status=400
+            )
 
 
 # Projekt löschen
 class ProjectDeleteView(View):
+    def get(self, request, pk):
+        project = get_object_or_404(Project, pk=pk)
+        project_name = project.name
+        project_id = project.id
+        return JsonResponse({"project_name": project_name, "project_id": project_id})
+
     def post(self, request, pk):
         try:
             project = get_object_or_404(Project, pk=pk)
             project.delete()
-
-            return JsonResponse({"message": "Projekt erfolgreich gelöscht."}, status=204)
-        except:
-            return JsonResponse({"error": "Projekt nicht gelöscht."}, status=400)
-
+            return JsonResponse({"message": "Projekt erfolgreich gelöscht."})
+        except Exception as e:
+            return JsonResponse({"error": "Fehler beim Löschen des Projekts." + str(e)}, status=400)
 
 # Dokument im Projekt hochladen
 class UploadFilesView(View):
@@ -87,7 +97,7 @@ class UploadFilesView(View):
             print("UploadFilesView wurde aufgerufen.")
 
             uploaded_files = request.FILES.getlist("file")
-            new_project_id = request.POST.get("project_id")
+            new_project_id = request.POST.get('project_id')
 
             project = Project.objects.get(id=new_project_id)
 
@@ -100,9 +110,11 @@ class UploadFilesView(View):
                 )
                 document.save()
 
-            return JsonResponse({"message": "Dokument wurde erfolgreich hochgeladen."}, status=201)
+            return JsonResponse(
+                {"message": "Dokument wurde erfolgreich hochgeladen."}, status=201)
         except:
-            return JsonResponse({"error": "Fehler beim Hochladen des Dokumentes: "}, status=400)
+            return JsonResponse(
+                {"error": "Fehler beim Hochladen des Dokumentes"}, status=400)
 
 
 # Projekte anzeigen lassen
@@ -157,14 +169,13 @@ class ProjectListView(View):
         return JsonResponse({"projects": project_data})
 
 
-# Projektdaten
-class ProjectDetailView(View):
+# Projektdaten und Zugriffsrechte
+class ProjectDetailAndPermissionsView(View):
     def get(self, request, project_id):
         try:
             project = Project.objects.get(id=project_id)
-
+            
             all_users = User.objects.all()
-
             all_user_profiles = UserProfile.objects.all()
             all_users = [user_profile.user for user_profile in all_user_profiles]
 
@@ -178,8 +189,8 @@ class ProjectDetailView(View):
                 assigned = username in assigned_usernames
                 users_with_assignment[username] = assigned
 
-            username = project.user.username if project.user else ""
-            user_id = project.user.id if project.user else ""
+            username = project.user.username
+            user_id = project.user.id
 
             documents = Documents.objects.filter(project=project)
             documents_data = [
@@ -257,9 +268,13 @@ class CommentCreateView(View):
             comment = Comment(user=request.user, text=text, project=project)
             comment.save()
 
-            return JsonResponse({"message": "Kommentar erfolgreich erstellt."}, status= 201)
+            return JsonResponse(
+                {"message": "Kommentar erfolgreich erstellt."}, status=201
+            )
         except:
-            return JsonResponse({"error": "Fehler beim Erstellen des Kommentars."}, status=400)
+            return JsonResponse(
+                {"error": "Fehler beim Erstellen des Kommentars."}, status=400
+            )
 
 
 # Kommentar aktualisieren
@@ -273,9 +288,13 @@ class CommentUpdateView(View):
                 comment.text = text
                 comment.save()
 
-            return JsonResponse({"message": "Kommentar erfolgreich aktualisiert."}, status=200)
+            return JsonResponse(
+                {"message": "Kommentar erfolgreich aktualisiert."}, status=200
+            )
         except:
-            return JsonResponse({"error": "Fehler beim Aktualisieren des Kommentars."}, status=400)
+            return JsonResponse(
+                {"error": "Fehler beim Aktualisieren des Kommentars."}, status=400
+            )
 
 
 # Kommentar löschen
@@ -287,9 +306,13 @@ class CommentDeleteView(View):
             if comment.user == request.user:
                 comment.delete()
 
-            return JsonResponse({"message": "Kommentar erfolgreich gelöscht."}, status=204)
+            return JsonResponse(
+                {"message": "Kommentar erfolgreich gelöscht."}, status=204
+            )
         except:
-            return JsonResponse({"error": "Fehler beim Löschen des Kommentars."}, status=400)
+            return JsonResponse(
+                {"error": "Fehler beim Löschen des Kommentars."}, status=400
+            )
 
 
 # Projekte markieren und in Markier-Liste hinzufügen

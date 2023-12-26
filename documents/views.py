@@ -36,9 +36,11 @@ class DocumentCreateView(View):
                 )
                 document.save()
 
-            return JsonResponse({"message": "Dokument erfolgreich hochgeladen."}, status=201)
+            return JsonResponse(
+                {"message": "Dokument erfolgreich hochgeladen."}, status=201)
         except:
-            return JsonResponse({"error": "Fehler beim Hochladen des Dokumentes."}, status=400)
+            return JsonResponse(
+                {"error": "Fehler beim Hochladen des Dokumentes."}, status=400)
 
 
 # Dokument aktualisieren
@@ -65,10 +67,10 @@ class DocumentUpdateView(View):
     def post(self, request, pk):
         try:
             document = get_object_or_404(Documents, pk=pk)
-
             document.name = request.POST.get("name")
 
             project_id = request.POST.get("project")
+
             if project_id:
                 project_exsit = Project.objects.get(id=project_id)
                 document.project = project_exsit
@@ -84,9 +86,11 @@ class DocumentUpdateView(View):
 
             document.save()
 
-            return JsonResponse({"message": "Dokument erfolgreich aktualisiert."}, status=200)
+            return JsonResponse(
+                {"message": "Dokument erfolgreich aktualisiert."}, status=200)
         except:
-            return JsonResponse({"error": "Fehler bei der Aktualisierung des Dokumentes."}, status=400)
+            return JsonResponse(
+                {"error": "Fehler bei der Aktualisierung des Dokumentes."}, status=400)
 
 
 # Dokument löschen
@@ -96,9 +100,11 @@ class DocumentDeleteView(View):
             document = get_object_or_404(Documents, pk=pk)
             document.delete()
 
-            return JsonResponse({"message": "Dokument erfolgreich gelöscht."}, status=204)
+            return JsonResponse(
+                {"message": "Dokument erfolgreich gelöscht."}, status=204)
         except:
-            return JsonResponse({"error": "Fehler beim Löschen des Dokumentes."}, status=400)
+            return JsonResponse(
+                {"error": "Fehler beim Löschen des Dokumentes."}, status=400)
 
 
 # Dokumente filtern
@@ -111,12 +117,11 @@ class DocumentFilterView(View):
         is_user = request.GET.get("is_user", "")
         show_watchlist = request.GET.get("show_watchlist", False)
         project_id = request.GET.get("project_id")
-        selecte_user = request.GET.get("selecte_user")
+        select_user = request.GET.get("select_user")
 
         user_list = request.user if request.user.is_authenticated else None
 
         documents = Documents.objects.all()
-
         watchlist_documents = []
         filtered_documents = documents
 
@@ -133,8 +138,8 @@ class DocumentFilterView(View):
         if project_id:
             documents = documents.filter(project__id=project_id)
 
-        if selecte_user:
-            filtered_documents = documents.filter(user=selecte_user)
+        if select_user:
+            filtered_documents = documents.filter(user=select_user)
 
         if is_user == "true" and request.user.is_authenticated:
             filtered_documents = filtered_documents.filter(Q(user=request.user))
@@ -167,7 +172,6 @@ class DocumentFilterView(View):
             for doc in filtered_documents
             if not project_id or (doc.project and doc.project.id == int(project_id))
         ]
-
         page = request.GET.get("page", 1)
         per_page = 12
 
@@ -196,9 +200,7 @@ class DocumentFilterView(View):
 class ProjectsAutocomplete(View):
     def get(self, request):
         query = request.GET.get("q", "")
-
         projects = Project.objects.filter(name__icontains=query)
-
         results = [{"id": project.id, "name": project.name} for project in projects]
 
         return JsonResponse({"results": results})
@@ -209,13 +211,14 @@ class TagCreateView(View):
     def post(self, request):
         try:
             tagFormTag = request.POST.get("tagFormTag")
-
             tag = Tags(name=tagFormTag, user=request.user)
             tag.save()
 
             return JsonResponse({"message": "Tag erfolgreich erstellt."}, status=201)
         except:
-            return JsonResponse({"error": "Fehler beim Erstellen des Tags."}, status=400)
+            return JsonResponse(
+                {"error": "Fehler beim Erstellen des Tags."}, status=400
+            )
 
 
 # Tag aktualisieren
@@ -227,9 +230,13 @@ class TagUpdateView(View):
             tag.name = name
             tag.save()
 
-            return JsonResponse({"message": "Tag wurde erfolgreich aktualisiert."}, status=200)
+            return JsonResponse(
+                {"message": "Tag wurde erfolgreich aktualisiert."}, status=200
+            )
         except Exception:
-            return JsonResponse({"error": "Fehler beim Aktualisieren des Tags."}, status=400)
+            return JsonResponse(
+                {"error": "Fehler beim Aktualisieren des Tags."}, status=400
+            )
 
 
 # Tag löschen
@@ -313,7 +320,6 @@ class DocumentWatchlistView(View):
         try:
             user_id = request.POST.get("user_id")
             document_id = request.POST.get("document_id")
-
             user = None
 
             try:
@@ -343,9 +349,7 @@ class DocumentInWatchlistView(View):
     def get(self, request, user_id, project_id):
         try:
             document_watch = DocumentWatch.objects.get(user_id=user_id)
-
             document = Documents.objects.get(id=project_id)
-
             is_on_watchlist = document in document_watch.watch_list_documents.all()
 
             return JsonResponse({"is_on_watchlist": is_on_watchlist})

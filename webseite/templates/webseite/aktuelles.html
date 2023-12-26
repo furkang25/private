@@ -19,7 +19,6 @@
       <p class="welcome-message">
         Hier finden Sie alle Informationen zu unseren Projekten und Dokumenten.
       </p>
-
       <div class="slideshow-container">
         <div class="slide">
           <img src="{% static 'bilder/Bild1.jpeg' %}" alt="Bild 1" />
@@ -42,7 +41,6 @@
           >Hinzufügen</a
         >
       </div>
-
       <div class="button-card">
         <h4>Meine Projekte</h4>
         <p>Verwalten Sie Ihre persönlichen Projekte.</p>
@@ -52,7 +50,6 @@
           >Verwalten</a
         >
       </div>
-
       <div class="button-card">
         <h4>Alle Projekte</h4>
         <p>Sehen Sie sich unsere aktuellen Immobilienprojekte an.</p>
@@ -62,7 +59,6 @@
           >Alle anzeigen</a
         >
       </div>
-
       <div class="button-card">
         <h4>Neues Dokument</h4>
         <p>Fügen Sie neue Dokumente hinzu.</p>
@@ -72,17 +68,15 @@
           >Hinzufügen</a
         >
       </div>
-
       <div class="button-card">
         <h4>Meine Dokumente</h4>
         <p>Verwalten Sie Ihre persönlichen Dokumente.</p>
         <a
-          href="{% url 'documents:documents_view_list' %}?myDocumente=true"
+          href="{% url 'documents:documents_view_list' %}?myDocuments=true"
           class="btn btn-primary"
           >Verwalten</a
         >
       </div>
-
       <div class="button-card">
         <h4>Alle Dokumente</h4>
         <p>Sehen Sie sich das Dokumentenarchiv an.</p>
@@ -93,7 +87,6 @@
         >
       </div>
     </div>
-
     <script>
       var slideIndex = 0;
       function showSlides() {

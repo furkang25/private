@@ -1,3 +1,4 @@
+<!--Fenster Kommentar erstellen oder bearbeiten-->
 <div
   class="modal fade"
   id="comment"
@@ -13,7 +14,7 @@
         </h5>
         <button
           type="button"
-          id="commentCloseModal"
+          id="commentClose"
           class="btn-close"
           data-bs-dismiss="modal"
           aria-label="Close"
@@ -23,9 +24,9 @@
         <div class="modal-body">
           <textarea class="form-control" id="commentForm" rows="3"></textarea>
 
-          <input type="hidden" id="user_id" value="{{user_id}}" />
-          <input type="hidden" id="project_id" value="" />
-          <input type="hidden" id="comment_id" value="" />
+          <input type="hidden" id="user_id" value="{{user_id}}">
+          <input type="hidden" id="project_id" value="">
+          <input type="hidden" id="comment_id" value="">
         </div>
         <div class="modal-footer">
           <button type="button" id="submitComment" class="btn btn-primary">

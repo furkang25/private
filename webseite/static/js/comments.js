@@ -1,6 +1,4 @@
 $(document).ready(function () {
-
-  // Abrufen eines Cookies anhand seines Namens
   const getCookie = (name) => {
     let cookieValue = null;
 
@@ -19,7 +17,7 @@ $(document).ready(function () {
     return cookieValue;
   };
 
-  // Funktion zum Erstellen eines Kommentars
+  // Erstellen eines Kommentars mit AJAX-Anfrage
   function createComment(projectId, commentText) {
     $.ajax({
       url: `/project/comment/create/${projectId}/`,
@@ -41,7 +39,7 @@ $(document).ready(function () {
     });
   }
 
-  // Funktion zum Aktualisieren eines Kommentars
+  // Aktualisieren eines Kommentars mit AJAX-Anfrage
   function updateComment(projectId, commentId, commentText) {
     $.ajax({
       url: `/project/comment/update/${commentId}/`,
@@ -63,7 +61,7 @@ $(document).ready(function () {
     });
   }
 
-  // Funktion zum Abrufen der Kommentar
+  // Abrufen Kommentar mit AJAX-Anfrage
   function updateCommentList(project_id) {
     $.ajax({
       url: "/project/project-detail/" + project_id + "/",
@@ -93,13 +91,13 @@ $(document).ready(function () {
         });
       },
       error: function () {
-        console.log("Fehler beim Abrufen der Kommentar.");
+        console.log("Fehler beim Abrufen des Kommentars.");
       },
     });
   }
   const csrftoken = getCookie("csrftoken");
 
-  // Funktion zum Löschen eines Kommentars
+  // Löschen eines Kommentars mit AJAX-Anfrage
   function deleteComment(commentId, projectId) {
     $.ajax({
       url: `/project/comment/${commentId}/`,
@@ -117,14 +115,14 @@ $(document).ready(function () {
     });
   }
 
-  // Kommentar Erstellung in einer Webanwendung
+  // Öffnet das Kommentarformular, wenn createComment geklickt wird
   $("#createComment").on("click", function () {
     var projectId = $("#bookmarkId").attr("projectBookmark");
     $("#project_id").val(projectId);
     $("#comment").modal("show");
   });
 
-  // Kommentar zu einem bestimmten Projekt zu erfassen
+  // Kommentar erstellen, wenn submitComment geklickt wird
   $("#submitComment").on("click", function (e) {
     e.preventDefault();
     var projectId = $("#project_id").val();
@@ -132,7 +130,7 @@ $(document).ready(function () {
     createComment(projectId, commentText);
   });
 
-  // Kommentar zur Bearbeitung in einem Modal-Fenster anzuzeigen
+  // Kommentar bearbeiten, wenn Elemente von .changeComment-data geklickt wird
   $("body").on("click", ".changeComment-data", function () {
     $("#changeComment").removeClass("d-none");
     $("#submitComment").addClass("d-none");
@@ -145,7 +143,7 @@ $(document).ready(function () {
     $("#comment").modal("show");
   });
 
-  // bestehenden Kommentar in einem Projekt zu aktualisieren
+  // Kommentar aktualisieren, wenn changeComment geklickt wird
   $("#changeComment").on("click", function () {
     var projectId = $("#project_id").val();
     var commentId = $("#comment_id").val();
@@ -153,30 +151,29 @@ $(document).ready(function () {
     updateComment(projectId, commentId, commentText);
   });
 
-  // Bestätigung für die Löschung eines Kommentars
+  // Bestätigung für die Löschung eines Kommentars in rot
   $("body").on("click", ".commentDeleteButton-data", function () {
     $(this).closest(".col-12").find(".commentText").css("color", "red");
     $("#textDeleteCommment").text("Kommentar löschen bestätigen");
     var projectId = $("#bookmarkId").attr("projectBookmark");
     var commentId = $(this).attr("data-comment-id");
-    $("#projektCommentID").val(projectId);
+    $("#projectCommentId").val(projectId);
     $("#commentDeleteID").val(commentId);
     $("#commentDeleteConfirmModal").modal("show");
   });
 
-  // Löschvorgang eines Kommentars in einem Projekt
+  // Kommentar löschen, wenn commentDeleteButton geklickt wird
   $("#commentDeleteButton").on("click", function () {
     var commentId = $("#commentDeleteID").val();
-    var projectId = $("#projektCommentID").val();
+    var projectId = $("#projectCommentId").val();
     deleteComment(commentId, projectId);
   });
 
- // Kommentar Modal zurückzusetzen
-  $("#commentCloseModal").on("click", function () {
+  // Kommentar Modal leeren
+  $("#commentClose").on("click", function () {
     $("#commentForm").val("");
     $("#user_id").val("");
     $("#project_id").val("");
     $("#comment_id").val("");
   });
-
 });

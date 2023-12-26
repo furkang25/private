@@ -1,10 +1,8 @@
 $(document).ready(function () {
-
   var currentPage = 1;
   var isUser = false;
   var onlyWatchlist = false;
 
-  // Abrufen eines Cookies anhand seines Namens
   const getCookie = (name) => {
     let cookieValue = null;
 
@@ -23,23 +21,23 @@ $(document).ready(function () {
     return cookieValue;
   };
   const csrftoken = getCookie("csrftoken");
-  
-  // Entfernen eines URL Parameters und Neuladen der Seite
+
+  // Entfernt documentOpenModal Parameter und lädt Seite neu
   function documentParameterRemove() {
     if (window.location.search.indexOf("documentOpenModal=true") !== -1) {
-      var newUrl = window.location.href.replace("?documentOpenModal=true","");
+      var newUrl = window.location.href.replace("?documentOpenModal=true", "");
       history.pushState({}, document.title, newUrl);
       location.reload();
     }
   }
 
-  // Entfernung von URL-Parametern beim Klicken auf ein Element
+  // Entfernt dann den Parameter, wenn closeDocument geklickt wird
   $("#closeDocument").click(function () {
     documentParameterRemove();
   });
 
-  // Überprüfung des Beobachtungsliste von Dokumenten
-  function documentsprojectsCheckWatchlistStatus(user_id, documentId) {
+  // Überprüfung der Markierliste von Dokumenten, Aktualisierung Icon
+  function documentsProjectsCheckWatchlistStatus(user_id, documentId) {
     var user_id = user_id;
     var project_id = documentId;
 
@@ -64,13 +62,11 @@ $(document).ready(function () {
           iconElement.removeClass("inWatchlist");
         }
       },
-      error: function () {
-
-      },
+      error: function () {},
     });
   }
 
-  // Automatisches Öffnen eines Modal-Fensters
+  // Öffnet Modal-Fensters, wenn documentOpenModal true
   function openModalIfParameterExists() {
     var urlParams = new URLSearchParams(window.location.search);
     var openModal = urlParams.get("documentOpenModal");
@@ -81,20 +77,20 @@ $(document).ready(function () {
   }
   openModalIfParameterExists();
 
-  // Beobachtungsliste eines Dokuments zu ändern und zu überprüfen
+  // Dokument in Markierliste, wenn documentBookmark Icon geklickt wird
   $("#documentCards").on("click", ".documentBookmark", function () {
     var document_id = $(this).attr("documentDataBookmark");
     var user_id = $("#loginUserId").val();
 
     $.ajax({
-      url: "/documents/toggle-watchlist/",
+      url: "/documents/document-watchlist/",
       method: "POST",
       data: { user_id: user_id, document_id: document_id },
       headers: {
         "X-CSRFToken": csrftoken,
       },
       success: function (data) {
-        documentsprojectsCheckWatchlistStatus(user_id, document_id);
+        documentsProjectsCheckWatchlistStatus(user_id, document_id);
       },
       error: function () {
         console.log("Fehler beim Ändern der Beobachtungsliste.");
@@ -102,7 +98,7 @@ $(document).ready(function () {
     });
   });
 
-  // Dokument zu löschen und Seite neu laden
+  // Dokument löschen, Modal wird geschlossen und Seite neu geladen
   $("body").on("click", ".document-delete-btn", function () {
     $("#deleteModal").modal("hide");
 
@@ -127,7 +123,7 @@ $(document).ready(function () {
     });
   });
 
-  // Bearbeitung von Dokument Informationen zu öffnen und die entsprechenden Daten zu laden
+  // Bearbeitung von Dokument und lädt die Dokumentdaten
   $("#documentCards").on("click", ".documentEdit", function () {
     var dataDocuments = $(this).attr("documentDataId");
 
@@ -149,7 +145,10 @@ $(document).ready(function () {
         $("#tagHiddenId").val(data.documents.tags_id);
         $("#DocumentTagForm").val(data.documents.tags_name);
         $("#documentNameForm").val(data.documents.name);
-        $("#documentDeleteButton").attr("data-documents-delete-id",data.documents.id);
+        $("#documentDeleteButton").attr(
+          "data-documents-delete-id",
+          data.documents.id
+        );
       },
       error: function () {
         console.error("Fehler beim Laden von Dokument Informationen.");
@@ -157,7 +156,7 @@ $(document).ready(function () {
     });
   });
 
-  // Informationen eines Dokument an den Server zu senden und Seite neu zu laden
+  // Aktualisiert Dokumentdaten, sendet diese an Server, die Seite wird neu geladen
   $("#updateButtonDocument").on("click", function () {
     var projectHiddenId = $("#projectHiddenId").val();
     var tagHiddenId = $("#tagHiddenId").val();
@@ -192,7 +191,7 @@ $(document).ready(function () {
     });
   });
 
-  // Dropdown Menü nach Änderung versteckten Formularfelder zurückgesetzt
+  // Bei Änderung in den Formularen werden die versteckten ids geleert
   $("#toAssign").on("change", function () {
     $("#toAssignHiddenId").val("");
   });
@@ -205,18 +204,18 @@ $(document).ready(function () {
     $("#tagHiddenId").val("");
   });
 
-  // Dokumente bestimmten Tags zu filtern
+  // Funktion wird automatisch aufgerufen, sobald Seite neu geladen wurde
   $(document).ready(function () {
-    DocumentFilterByTags(currentPage);
+    documentsFilter(currentPage);
   });
 
-  // Dokumentenliste ausgewählten Seitennummer neu zu filtern
+  // Dokumente filtern
   $(document).on("click", ".paginationLink", function () {
     var page = parseInt($(this).data("page"));
-    DocumentFilterByTags(page);
+    documentsFilter(page);
   });
 
-  // Navigation durch mehrseitige Dokumentenlisten
+  //Generiert Paginierungslinks für Seitenanzahl
   function createPaginationLinks(pageCount) {
     var paginationContainer = $("#paginationContainer");
     paginationContainer.empty();
@@ -250,10 +249,10 @@ $(document).ready(function () {
     paginationContainer.append(nextPageLink);
   }
 
-  // Präferenzen zu filtern und Dokumente anzuzeigen
-  function DocumentFilterByTags(page) {
+  // Filtert Dokumente und zeigt diese an
+  function documentsFilter(page) {
     var searchQuery = $("#searchQuery").val();
-    var selecteUser = $("#selectUser").val();
+    var selectedUser = $("#selectUser").val();
     var selectedTags = $("#selectTags").val();
     var dateFrom = $("#datepickerFrom").val();
     var dateTo = $("#datepickerTo").val();
@@ -268,8 +267,8 @@ $(document).ready(function () {
       dataToSend.selected_tags = selectedTags;
     }
 
-    if (selecteUser && selecteUser.length > 0) {
-      dataToSend.selecteUser = selecteUser;
+    if (selectedUser && selectedUser.length > 0) {
+      dataToSend.selectedUser = selectedUser;
     }
 
     var dateFromMoment = moment(dateFrom, "DD.MM.YYYY");
@@ -290,10 +289,10 @@ $(document).ready(function () {
         date_from: dataToSend.date_from,
         date_to: dataToSend.date_to,
         search_query: searchQuery,
-        selecte_user: dataToSend.selecteUser,
+        select_user: dataToSend.selectedUser,
         is_user: isUser,
         show_watchlist: onlyWatchlist,
-        project_id: projectIdVal,
+        project_id: projectSaveParam,
         page: parseInt(page),
       },
       success: function (data) {
@@ -304,17 +303,12 @@ $(document).ready(function () {
         const documentsRow = $('<div class="row"></div>');
 
         data.documents.forEach((element) => {
-          const tagsString = Array.isArray(element.tags)
-            ? element.tags.join(", ")
-            : "";
-
           if (onlyWatchlist && !element.is_on_watchlist) {
             return;
           }
-
           var userLogin = $("#loginUserId").val();
           documentId = element.id;
-          documentsprojectsCheckWatchlistStatus(userLogin, documentId);
+          documentsProjectsCheckWatchlistStatus(userLogin, documentId);
 
           htmlCard = `
                     <div class="col-md-4 col-12 mb-4">
@@ -334,19 +328,11 @@ $(document).ready(function () {
                                 }
                             </div>
                             <div class="card-body">
-                                <h5 class="card-title card-title-custom">${
-                                  element.name
-                                }</h5>
+                                <h5 class="card-title card-title-custom">${element.name}</h5>
                                 <p class="card-text">
-                                    </p><small class="text-muted">Projekt: ${
-                                      element.project
-                                    }</p></small>
-                                    <p><small class="text-muted">Hochgeladen von: ${
-                                      element.user
-                                    }</p></small>
-                                    </p><small class="text-muted">Hochgeladen am: ${
-                                      element.create
-                                    }</p></small>
+                                    </p><small class="text-muted">Projekt: ${element.project}</p></small>
+                                    <p><small class="text-muted">Hochgeladen von: ${element.user}</p></small>
+                                    </p><small class="text-muted">Hochgeladen am: ${element.create}</p></small>
                                 </p>
                                 <i id="bookmarkId" documentDataBookmark="${
                                   element.id
@@ -366,15 +352,12 @@ $(document).ready(function () {
         documentCards.append(documentsRow);
         createPaginationLinks(data.page_count);
       },
-      error: function (error) {
-        console.error("Fehler beim Abrufen eines Dokument Karte");
-      },
     });
   }
 
   // Dokumentenfilterung bei Änderung der Tag-Auswahl
   $("#selectTags").change(function () {
-    DocumentFilterByTags();
+    documentsFilter();
   });
 
   // Dokumentenfilterung bei Änderung des Startdatums
@@ -383,7 +366,7 @@ $(document).ready(function () {
     var dateTo = $("#datepickerTo").val();
 
     if (dateFrom && dateTo) {
-      DocumentFilterByTags();
+      documentsFilter();
     }
   });
 
@@ -393,87 +376,88 @@ $(document).ready(function () {
     var dateTo = $(this).val();
 
     if (dateFrom && dateTo) {
-      DocumentFilterByTags();
+      documentsFilter();
     }
   });
 
-  // Eingegebenen Suchbegriff zu filtern
+  // Dokumentenfilterung bei Tasteneingabe von min. 4 Zeichen
   $("#searchQuery").keyup(function () {
     var searchQuery = $(this).val();
     if (searchQuery.length >= 4) {
-      DocumentFilterByTags(searchQuery);
+      documentsFilter(searchQuery);
     }
   });
 
   // Dokumentenfilterung bei Änderung der Benutzerauswahl
   $("#selectUser").change(function () {
-    DocumentFilterByTags();
+    documentsFilter();
   });
 
-  // Abrufen von URL Parametern
+  // Holt und speichert Werte von myDocuments und project_id aus URL
   function getUrlParameter(parameterName) {
     var urlParams = new URLSearchParams(window.location.search);
     return urlParams.get(parameterName);
   }
-
-  var myDocumenteParameter = getUrlParameter("myDocumente");
+  var myDocumentParameter = getUrlParameter("myDocuments");
   var projectIdParameter = getUrlParameter("project_id");
 
-  // Überprüfen und Aktivieren von Benutzerfiltern
-  if (myDocumenteParameter === "true") {
+  // Wenn true, dann werden dem Benutzer seine erstellten Dokumente angezeigt
+  if (myDocumentParameter === "true") {
     isUser = true;
-    DocumentFilterByTags(isUser);
+    documentsFilter(isUser);
   }
 
-  // Überprüft von project_id existiert
+  // Filterfunktion basierend auf projectIdParameter
   if (projectIdParameter) {
-    var projectIdVal = projectIdParameter;
-    DocumentFilterByTags(projectIdVal);
+    var projectSaveParam = projectIdParameter;
+    documentsFilter(projectSaveParam);
   } else {
-    DocumentFilterByTags();
+    documentsFilter();
   }
 
-  // Aktivieren der Benutzerdokumentenansicht
+  // Zeigt von Benutzer erstellte Dokumente an, wenn userDocuments geklickt wird
   $("#userDocuments").on("click", function (event) {
     event.preventDefault();
     onlyWatchlist = false;
     isUser = true;
-    DocumentFilterByTags(isUser);
+    documentsFilter(isUser);
   });
 
-  // Aktivieren der Beobachtungsliste Dokumentenansicht
+  // Zeigt Markier-Liste an, wenn watchlistDokument geklickt wird
   $("#watchlistDocument").on("click", function (event) {
     event.preventDefault();
     isUser = false;
     onlyWatchlist = true;
-    DocumentFilterByTags(onlyWatchlist);
+    documentsFilter(onlyWatchlist);
   });
 
-  // Aktivieren der gesamten Dokumentenansicht
+  // Zeigt Alle Dokumente an, wenn allDocuments geklickt wird
   $("#allDocuments").on("click", function () {
     isUser = false;
     onlyWatchlist = false;
-    DocumentFilterByTags(isUser, onlyWatchlist);
+    documentsFilter(isUser, onlyWatchlist);
   });
 
   // Zurücksetzen der Dokumentenfilter
-  $("#DocumentResetFilter").on("click", function () {
+  $("#resetFilterButton").on("click", function () {
     setTimeout(function () {
       location.reload();
     }, 200);
   });
 
-  // Anzeigen des Zurücksetzen Button bei Filteränderungen
-  $("#selectTags, #datepickerFrom, #datepickerTo, #selectUser, #searchQuery").on("change", function () {
-    $("#DocumentResetFilter").removeClass("d-none");
+  // Zurücksetzen des Filters, wenn resetFilterButton geklickt wird
+  $(
+    "#selectTags, #datepickerFrom, #datepickerTo, #selectUser, #searchQuery"
+  ).on("change", function () {
+    $("#resetFilterButton").removeClass("d-none");
   });
 
-  // Entfernen von URL Parametern
+  // Entfernt URL Parameter
   function removeUrlParameters() {
     history.replaceState({}, document.title, window.location.pathname);
   }
 
-  // Entfernen von URL Parametern durch Klicken auf den Zurücksetzen Button
+  // Entfernt URL Parameter, wenn allDocuments geklickt wird
   var resetButton = document.getElementById("allDocuments");
   if (resetButton) {
     resetButton.addEventListener("click", function () {
@@ -481,7 +465,7 @@ $(document).ready(function () {
     });
   }
 
-  // Datumseingabefeldern 
+  // Datumseingabefelder
   $(function () {
     $("#datepickerFrom").datepicker({
       dateFormat: "dd.mm.yy",
@@ -491,7 +475,7 @@ $(document).ready(function () {
     });
   });
 
-  // Laden von Benutzeroptionen für Dropdown Listen
+  // Ruft Benutzerdaten für das Dropdown selectUser
   function userOptions() {
     $.ajax({
       url: "/documents/user/select/",
@@ -512,13 +496,13 @@ $(document).ready(function () {
         }
       },
       error: function () {
-        console.error("Fehler beim  Laden von Benutzeroptionen.");
+        console.error("Fehler beim  Laden von Benutzerdaten.");
       },
     });
   }
   userOptions();
 
-  // Laden von Tag Optionen für Dropdown Listen
+  // Ruft Tag-Daten für das Dropdown selectTags
   function tagOptions() {
     $.ajax({
       url: "/documents/tags/select/",
@@ -546,7 +530,7 @@ $(document).ready(function () {
   }
   tagOptions();
 
-  // Formularfelder und Eingabebereiche zurückgesetzt und Seite Neuladen
+  // Formularfelder zurückgesetzen und Seite neu laden, wenn closeDocument geklickt wird
   $("body").on("click", "#closeDocument", function () {
     $("#toAssign").val("");
     $("#toAssignHiddenId").val("");
@@ -564,7 +548,7 @@ $(document).ready(function () {
     location.reload();
   });
 
-  // Dropzone für Dateiupload
+  // Dropzone, um Dokument hochzuladen
   function initializeDropzone() {
     var myDropzone = new Dropzone("#dropzoneDocument", {
       url: "/documents/create/",
@@ -625,49 +609,48 @@ $(document).ready(function () {
   }
   initializeDropzone();
 
-  // Autovervollständigung für Zugewiesen in einer Suchleiste
-  $("#toAssign").on("input", function () {
-    var query = $(this).val();
+  // $("#toAssign").on("input", function () {
+  //   var query = $(this).val();
 
-    $.ajax({
-      url: "/documents/autocomplete/toAssign/",
-      data: { q: query },
-      success: function (data) {
-        var results = data.results;
+  //   $.ajax({
+  //     url: "/documents/autocomplete/toAssign/",
+  //     data: { q: query },
+  //     success: function (data) {
+  //       var results = data.results;
 
-        var resultList = $("#toAssignResults");
-        resultList.empty();
-        var resultList = $("<ul>");
+  //       var resultList = $("#toAssignResults");
+  //       resultList.empty();
+  //       var resultList = $("<ul>");
 
-        $.each(results, function (item) {
-          var listItem = $('<li class="toAssign-item">')
-            .attr("data-id", item.id)
-            .text(item.name);
+  //       $.each(results, function (item) {
+  //         var listItem = $('<li class="toAssign-item">')
+  //           .attr("data-id", item.id)
+  //           .text(item.name);
 
-          resultList.append(listItem);
-        });
+  //         resultList.append(listItem);
+  //       });
 
-        $("#toAssignResults").append(resultList);
-      },
-    });
-  });
+  //       $("#toAssignResults").append(resultList);
+  //     },
+  //   });
+  // });
 
-  // Auswahl eines Zugewiese aus den Autovervollständigungsergebnissen
-  $(document).on("click", ".toAssign-item", function () {
-    var toAssignId = $(this).data("id");
-    var toAssignName = $(this).text();
-    var resultList = $("#toAssignResults");
-    var hideDelay = 300;
+  // // Wählt Projekt von Autocomplete-Liste aus und aktualisiert Eingabefelder
+  // $(document).on("click", ".toAssign-item", function () {
+  //   var toAssignId = $(this).data("id");
+  //   var toAssignName = $(this).text();
+  //   var resultList = $("#toAssignResults");
+  //   var hideDelay = 300;
 
-    $("#toAssign").val(toAssignName);
-    $("#toAssignHiddenId").val(toAssignId);
+  //   $("#toAssign").val(toAssignName);
+  //   $("#toAssignHiddenId").val(toAssignId);
 
-    setTimeout(function () {
-      resultList.empty();
-    }, hideDelay);
-  });
+  //   setTimeout(function () {
+  //     resultList.empty();
+  //   }, hideDelay);
+  // });
 
-  // Autovervollständigung für Tag in einer Suchleiste
+  // Autocomplete bei Tags, wenn Dokument einem Tag zugewiesen werden soll
   $("#DocumentTagForm").on("input", function () {
     var query = $(this).val();
 
@@ -694,7 +677,7 @@ $(document).ready(function () {
     });
   });
 
-  // Auswahl eines Tags aus den Autovervollständigungsergebnissen
+  // Wählt Tag aus Autocomplete-Liste aus und aktualisiert Eingabefelder
   $(document).on("click", ".tag-item", function () {
     var toAssignId = $(this).data("id");
     var toAssignName = $(this).text();
@@ -709,7 +692,7 @@ $(document).ready(function () {
     }, hideDelay);
   });
 
-  // Autovervollständigung für projectName in einer Suchleiste
+  // Autocomplete bei Projektname, wenn Dokument einem Projekt zugewiesen werden soll
   $("#projectNameForm").on("input", function () {
     var query = $(this).val();
 
@@ -734,7 +717,7 @@ $(document).ready(function () {
     });
   });
 
-  // Auswahl eines projectName aus den Autovervollständigungsergebnissen
+  // Wählt Projekt aus Autocomplete-Liste aus und aktualisiert Eingabefelder
   $(document).on("click", ".project-item", function () {
     var toAssignId = $(this).data("id");
     var toAssignName = $(this).text();

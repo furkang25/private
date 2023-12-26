@@ -1,9 +1,7 @@
 $(document).ready(function () {
-
   var myDropzone;
   var projectId;
 
-  // Abrufen eines Cookies anhand seines Namens
   const getCookie = (name) => {
     let cookieValue = null;
 
@@ -23,7 +21,7 @@ $(document).ready(function () {
   };
   const csrftoken = getCookie("csrftoken");
 
-  // Entfernen eines URL Parameters und Neuladen der Seite
+  // Entfernt Parameter aus  URL und lädt Seite neu
   function projectParameterRemove() {
     if (window.location.search.indexOf("project_open_modal=true") !== -1) {
       var newUrl = window.location.href.replace("?project_open_modal=true", "");
@@ -32,14 +30,7 @@ $(document).ready(function () {
     }
   }
 
-  // Konfiguration der Dropzone Optionen
-  Dropzone.options.dropzone = {
-    init: function () {
-      myDropzone = this;
-    },
-  };
-
-  // Entfernung von URL-Parametern beim Klicken auf ein Element
+  // Schließt das Projekt und deaktiviert Dropzone
   $("#closeProject").click(function () {
     projectParameterRemove();
     if (myDropzone) {
@@ -48,7 +39,7 @@ $(document).ready(function () {
     }
   });
 
-  // Öffnen eines Modals, wenn ein URL Parameter vorhanden ist
+  // Öffnet Modal, wenn ein URL Parameter vorhanden ist
   function openModalIfParameterExists() {
     var urlParams = new URLSearchParams(window.location.search);
     var openModal = urlParams.get("project_open_modal");
@@ -59,7 +50,7 @@ $(document).ready(function () {
   }
   openModalIfParameterExists();
 
-  // Löschen eines Projekts
+  // Löscht Projekt über AJAX-Anfrage und aktualisiert Projektliste
   function deleteProject(projectId) {
     var viewCreatorProject = $("#viewCreatorProject");
     var viewNameProject = $("#viewNameProject");
@@ -90,14 +81,14 @@ $(document).ready(function () {
     });
   }
 
-  // Bestätigung des Projektlöschens
+  // Löschen von Projekt, wenn conformDeleteButton geklickt wird
   $("#confirmDeleteButton").on("click", function () {
     var project_id = $("#projectDeleteID").val();
     console.log(project_id);
     deleteProject(project_id);
   });
 
-  // Bestätigung des Projektlöschens durch Papierkorb Icon
+  // Bestätigung der Projektlöschung, wenn trashDelete geklickt wird
   $("#trashDelete").on("click", function () {
     var project_id = $("#updateProject").attr("data-project-id");
 
@@ -120,7 +111,7 @@ $(document).ready(function () {
     });
   });
 
-  // Aktualisieren von Projektdaten im Modal 
+  // Öffnet Modal Projektaktualisierung, wenn updateProject geklickt wird
   $("#updateProject").on("click", function () {
     $("#saveButtonProject").addClass("d-none");
     $("#updateButtonProject").removeClass("d-none");
@@ -176,7 +167,7 @@ $(document).ready(function () {
     });
   });
 
-  // Aktualisieren von Projektdaten im Modal durch Edit Icon
+  // Aktualisierung Projekt, wenn updateButtonProject geklickt wird
   $("#updateButtonProject").on("click", function () {
     var project_id = $("#updateProject").attr("data-project-id");
     var projectName = $("#projectName").val();
@@ -210,7 +201,7 @@ $(document).ready(function () {
     });
   });
 
-  // Überprüfung des Beobachtungsliste von Projekte
+  // Überprüfung Markierliste von Projekten
   function projectsCheckWatchlistStatus(user, project) {
     var user_id = user;
     var project_id = project;
@@ -235,13 +226,13 @@ $(document).ready(function () {
     });
   }
 
-  // Projekt zur Beobachtungsliste hinzufügen oder entfernen
+  // Projekt zur Markierliste hinzufügen oder entfernen
   $("#bookmarkForm").on("click", ".project", function () {
     var project_id = $(this).attr("projectBookmark");
     var user_id = $("#userId").val();
 
     $.ajax({
-      url: "/project/toggle-watchlist/",
+      url: "/project/document-watchlist/",
       method: "POST",
       data: { user_id: user_id, project_id: project_id },
       headers: {
@@ -260,7 +251,7 @@ $(document).ready(function () {
     });
   });
 
-  // Projekt Detailansicht
+  // Projektdaten anzeigen
   function detailViewProject(project_id) {
     $("[data-project]").removeClass("active");
     var viewCreatorProject = $("#viewCreatorProject");
@@ -289,7 +280,8 @@ $(document).ready(function () {
                         <cite title="Source Title" class="user-name">
                         ${document.user} ${
             document.can_edit
-              ? `<i data-comment-id="${document.id}" class="changeComment-data fa-regular fa-pen-to-square"></i> <i data-comment-id="${document.id}" class="commentDeleteButton-data fa-solid fa-trash"></i>`
+              ? `<i data-comment-id="${document.id}" class="changeComment-data fa-regular fa-pen-to-square"></i>
+                <i data-comment-id="${document.id}" class="commentDeleteButton-data fa-solid fa-trash"></i>`
               : ""
           } 
                         </cite>
@@ -310,6 +302,7 @@ $(document).ready(function () {
         viewNameProject.text(data.name);
         console.log(data.can_edit);
 
+        //Zugriffsrechte
         if (data.can_edit) {
           $("#updateProject").removeClass("d-none");
           $("#createComment").removeClass("d-none");
@@ -425,13 +418,13 @@ $(document).ready(function () {
     });
   }
 
-  // Projekt Suchfunktion
+  // Projekte suchen
   $("#searchProject").on("input", function () {
     var searchQuery = $(this).val();
     updateProjectList(searchQuery);
   });
 
-  // Abrufen von URL Parametern
+  // Prüft URl-Parameter, aktualisiert Projektliste auf Suchanfrage
   function getUrlParameter(parameterName) {
     var urlParams = new URLSearchParams(window.location.search);
     return urlParams.get(parameterName);
@@ -446,39 +439,42 @@ $(document).ready(function () {
     updateProjectList();
   }
 
-  // Aktualisierung der Projektliste auf Benutzeraktionen
+  // Aktualisierung Liste von Benutzer Projekt, wenn NavLink geklickt wird
   $(".nav-link-user-projects").on("click", function () {
     var searchQuery = $("#searchProject").val();
     updateProjectList(searchQuery, true);
   });
 
+  // Aktualisierung Liste markierte Projekte, wenn NavLink geklickt wird
   $(".nav-link-watchlist-projects").on("click", function () {
     var searchQuery = $("#searchProject").val();
     updateProjectList(searchQuery, false, true);
   });
 
+  // Aktualisierung Liste zugewiesene Projekte, wenn NavLink geklickt wird
   $("#assignedProjects").on("click", function () {
     updateProjectList(searchQuery, false, false, true);
   });
 
+  // Aktualisierung Liste alle Projekte, wenn NavLink geklickt wird
   $("#allProjects").on("click", function () {
     updateProjectList();
     $("#searchProject").val("");
   });
 
-  // Zurücksetzen des my_project Parameter
-  function resetmyProjectParameter() {
+  // Entfernt URL-Parameter, aktualisiert Browser-URL ohne my_project
+  function resetMyProjectParameter() {
     var url = new URL(window.location.href);
     url.searchParams.delete("my_project");
     window.location.href = url.toString();
   }
 
-  // Anzeige aller Projekte in der Projektliste
+  // Anzeige aller Projekte, wenn allProjects geklickt wird
   document.getElementById("allProjects").addEventListener("click", function () {
-    resetmyProjectParameter();
+    resetMyProjectParameter();
   });
 
-  // Zurücksetzen und Schließen des Projektformulars
+  // Projektformular schließen, wenn closeProject geklickt wird
   $("#closeProject").on("click", function () {
     $("#projectName").val("");
     $("#toAssign").val("");
@@ -490,7 +486,7 @@ $(document).ready(function () {
     location.reload();
   });
 
-  // Verarbeitung des Klicks auf die Speichern im Projektformular
+  // Eingabe wird validiert, Projekt gespeichert, wenn saveButtonProjekt geklickt wird
   $("#saveButtonProject").on("click", function (e) {
     e.preventDefault();
 
@@ -525,14 +521,14 @@ $(document).ready(function () {
         $("#saveButtonProject").addClass("d-none");
         initializeDropzone();
 
-        var alertProject = $("#alertProjekt");
-        alertProject.append(`
+        var alertProjectSuccess = $("#alertProject");
+        alertProjectSuccess.append(`
                 <div class="alert alert-success" role="alert">
                     Das Projekt wurde angelegt!
                 </div>
                 `);
         setTimeout(function () {
-          $("#alertProjekt").hide("");
+          $("#alertProject").hide("");
         }, 5000);
       },
       error: function (data) {
@@ -546,6 +542,9 @@ $(document).ready(function () {
     Dropzone.autoDiscover = false;
     const myDropzone = new Dropzone("#dropzone", {
       url: "/project/upload-files/",
+      headers: {
+        "X-CSRFToken": csrftoken,
+      },
       init: function () {
         this.on("success", function (file, response) {
           updateProjectList();
@@ -558,8 +557,8 @@ $(document).ready(function () {
           }
         });
         console.log(projectId);
-        this.on("sending", function (formData) {
-          formData.append("csrfMiddlewaretoken", csrftoken);
+        this.on("sending", function (file, xhr, formData) {
+          formData.append("csrfmiddlewaretoken", csrftoken);
           formData.append("project_id", projectId);
         });
       },
@@ -570,13 +569,13 @@ $(document).ready(function () {
     });
   }
 
-  // Öffnen des Projektformular Modalfensters
+  // Öffnet Projekterstellung-Modal, startet AJAX-Suche nach Verzögerung
   var myModal = $("#createProject");
   myModal.on("show.bs.modal", function (e) {
     setTimeout(performAjaxSearch, 100);
   });
 
-  // Durchführung einer Ajax Suche für Benutzerdaten
+  // Durchführung AJAX-Suche für Benutzerdaten, wenn projectName leer ist
   function performAjaxSearch() {
     var valprojectName = $("#projectName").val();
     if (valprojectName === "") {
@@ -613,13 +612,13 @@ $(document).ready(function () {
     }
   }
 
-  // Validierung des Formulars
+  // Validierung der Eingabefelder
   function validateForm() {
     var projectName = $("#projectName").val();
     var description = $("#description").val();
 
     if (!projectName || projectName.trim() === "") {
-      displayErrorMessage("projectNamen ist erforderlich.");
+      displayErrorMessage("Projektname ist erforderlich.");
       return false;
     }
     if (!description || description.trim() === "") {
@@ -629,7 +628,7 @@ $(document).ready(function () {
     return true;
   }
 
-  // ausgewählten HTML-Elementen zu
+  // Verbirgt Fehlermeldung bei Eingabe oder Änderung in Eingabefelder
   $("#projectName, #description, #projectAllocate").on(
     "input change",
     function () {
@@ -637,7 +636,7 @@ $(document).ready(function () {
     }
   );
 
-  // Fehlermeldung auf der Webseite an
+  // Fehlermeldung
   function displayErrorMessage(message) {
     $("#errorAlert").text(message);
     $("#errorAlert").show();
@@ -645,5 +644,4 @@ $(document).ready(function () {
   function hideErrorMessage() {
     $("#errorAlert").hide();
   }
-
 });
